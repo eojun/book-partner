@@ -1,4 +1,4 @@
-package com.bookpartner.web;
+package com.bookpartner.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
