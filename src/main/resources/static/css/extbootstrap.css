@@ -1,0 +1,222 @@
+@CHARSET "UTF-8";
+
+body {
+    background-color: #FFFFFF;
+    color: #333333;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
+}
+
+.panel-body {
+  padding: 8px;
+}
+
+.span12 {
+    width: 940px;
+}
+.span11 {
+    width: 860px;
+}
+.span10 {
+    width: 780px;
+}
+.span9 {
+    width: 700px;
+}
+.span8 {
+    width: 620px;
+}
+.span7 {
+    width: 540px;
+}
+.span6 {
+    width: 460px;
+}
+.span5 {
+    width: 380px;
+}
+.span4 {
+    width: 300px;
+}
+.span3 {
+    width: 220px;
+}
+.span2 {
+    width: 140px;
+}
+.span1 {
+    width: 60px;
+}
+
+.input-mini {
+    width: 60px;
+}
+.input-small {
+    width: 90px;
+}
+.input-medium {
+    width: 150px;
+}
+.input-large {
+    width: 210px;
+}
+.input-xlarge {
+    width: 270px;
+}
+.input-xxlarge {
+    width: 530px;
+}
+
+.search-group {
+	margin-top:5px;
+	margin-left:50px;
+	width:400px;
+}
+
+.relative-group {
+	position:relative;
+}
+
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.divGoodsBonus{padding:0 0 5px 0;}
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 10px 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+legend {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    color: #333333;
+    display: block;
+    font-size: 19.5px;
+    line-height: 36px;
+    margin-bottom: 18px;
+    border: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.form-inline .control-label {
+    text-align: left;
+}
+
+div#divEventTitleForm{float:left; width:50%;}
+div#divEventTitleList{float:left; width:50%;}
+
+div.scrollable{
+	width: 100%;
+	overflow: auto;
+	height:200px;
+}
+
+
+/* loading */
+.loading-wrap {display:none;position:absolute; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.5; filter:alpha(opacity=50); z-index:99999;}
+.loading {position:fixed; top:50%; left:50%;  width:64px; height:64px; text-align:center;}
+
+
+/*
+ * Callouts
+ *
+ * Not quite alerts, but custom and helpful notes for folks reading the docs.
+ * Requires a base and modifier class.
+ */
+
+/* Common styles for all types */
+.bs-callout {
+  padding: 10px 10px;
+  margin: 12px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+
+.bs-callout-sub {
+  padding: 3px 6px;
+  margin: 15px 2px;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+.bs-callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.bs-callout h5 {
+  margin-top: 0;
+  margin-bottom: 1px;
+}
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+.bs-callout code {
+  border-radius: 3px;
+}
+
+/* Tighten up space between multiple callouts */
+.bs-callout + .bs-callout {
+  margin-top: -5px;
+}
+
+.bs-callout + .bs-callout-sub {
+  margin-top: 100px;
+  margin-bottom: -3px;
+}
+
+/* Variations */
+.bs-callout-primary{
+  border-left-color: #337ab7;
+}
+.bs-callout-danger {
+  border-left-color: #ce4844;
+}
+.bs-callout-danger h4 {
+  color: #ce4844;
+}
+.bs-callout-warning {
+  border-left-color: #9a5b07;
+}
+.bs-callout-warning h4 {
+  color: #aa6708;
+}
+.bs-callout-info {
+  border-left-color: #2b95ff;
+}
+.bs-callout-info h4 {
+  color: #1b809e;
+}
+
+.bs-callout-tab {
+  border-left-color: #c0c0c0;
+}
+
+.btn-padding-wide {
+    padding:5px 20px;	
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+
+.bs-table-title:after {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    content: "Example";
+}
