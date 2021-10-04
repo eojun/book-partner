@@ -1,0 +1,68 @@
+# prod
+spring:
+  profiles:
+    active: "prod"
+  main:
+    allow-bean-definition-overriding: true
+  mvc.view:
+    prefix: /WEB-INF/views/
+    suffix: .jsp
+  servlet:
+    multipart:
+      location: /home/unitaslibro/libropartner/tmp
+      max-request-size: 10MB
+      max-file-size: 10MB
+
+server:
+  port: 8440
+  tomcat:
+    basedir: ./
+    accesslog:
+      enabled: true
+      pattern: "%{yyyy-MM-dd HH:mm:ss}t %a %s \"%r\" %b (%D ms)"
+      directory: log
+      suffix: .log
+      prefix: access
+
+datasource:
+  oracle:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    url: "jdbc:oracle:thin:@st-rds-libro.cqhn8loawgfg.ap-northeast-2.rds.amazonaws.com:1521:LIBRO"
+    username:
+    password:
+    initial-size: 2
+    max-active: 10
+    max-idle: 5
+    min-idle: 2
+    max-wait: 3000
+    testOnBorrow: true
+    testWhileIdle: true
+    validation-interval: 20000
+    validation-query: SELECT 1 from dual
+servlet:
+  multipart:
+    location: /home/unitaslibro/libropartner/tmp
+
+logging:
+  config: classpath:logback-spring-real.xml
+  level:
+    org.thymeleaf: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.quartz.core: DEBUG
+    org.h2.server.web: DEBUG
+
+app:
+  templates: "src/main/resources/"
+
+upload_file_dir: upload
+file_temp_root: /home/unitaslibro/libropartner/tmp/
+dangi.url: "https://member.dangi.co.kr"
+dangi.cash.url: "http://bill.dangi.co.kr:8080"
+skyedu.url: "https://sso.skyedu.com"
+libro.join.url: "https://join-book.conects.com"
+conects.url: "https://sapi.conects.com:443"
+image.base.path: "/Libro_V6/upload/"
+partner.daumshop.put.file.dir: "/home/unitaslibro/libropartner/daumbook/"
+partner.naverbook.put.file.dir: "/home/unitaslibro/libropartner/naverbook/"
+
