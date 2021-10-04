@@ -14,8 +14,8 @@ datasource:
   oracle:
     driver-class-name: "oracle.jdbc.driver.OracleDriver"
     url: "jdbc:oracle:thin:@st-rds-oracle-conects-book-dev.cqhn8loawgfg.ap-northeast-2.rds.amazonaws.com:1521:LIBRO"
-    username: "sw_libro"
-    password: "Swick1234"
+    username:
+    password:
     initial-size: 2
     max-active: 10
     max-idle: 5
@@ -25,21 +25,6 @@ datasource:
     testWhileIdle: true
     validation-interval: 20000
     validation-query: SELECT 1 from dual
-  mysql:
-    driver-class-name: "com.mysql.jdbc.Driver"
-    url: "jdbc:mysql://211.239.162.169:3306/libro_event?autoReconnection=true&useUnicode=true&characterEncoding=utf8"
-    user-name: "libro"
-    password: "libro@@#"
-    initial-size: 2
-    max-active: 10
-    max-idle: 5
-    min-idle: 2
-    max-wait: 3000
-    testOnBorrow: true
-    testWhileIdle: true
-    validation-interval: 20000
-    validation-query: SELECT 1
-
 logging:
   config: classpath:logback-spring-dev.xml
   level:

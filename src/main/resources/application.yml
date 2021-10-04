@@ -21,8 +21,8 @@ spring:
     driver-class-name: "oracle.jdbc.driver.OracleDriver"
     #url: "jdbc:oracle:thin:@st-rds-oracle-conects-book-dev.cqhn8loawgfg.ap-northeast-2.rds.amazonaws.com:1521:LIBRO"
     url: "jdbc:oracle:thin:@st-rds-libro.cqhn8loawgfg.ap-northeast-2.rds.amazonaws.com:1521:LIBRO"
-    username: "sw_libro"
-    password: "Swick1234"
+    username:
+    password:
     initial-size: 2
     max-active: 10
     max-idle: 5
