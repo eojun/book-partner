@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/layout}">
+
+<th:block layout:fragment="content">
+    <link href="/static/css/sales.css" rel="stylesheet">
+    <div class="container" id="container">
+
+        <div class="loading-wrap">
+            <div class="loading">
+                <img src="/resources/image/loading.gif" alt="로딩중" />
+            </div>
+        </div>
+
+        <!-- /.panel-heading -->
+        <!-- Git Test -->
+        <div class="row">
+            <div style="padding:5px" class="panel-body">
+                <h3 class=""><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> 일일 주문내역(일자별)</h3>
+                <ul class="">
+                    <li>결재(승인)완료 주문내역 입니다.</li>
+                    <li>검색기간은 최대 1개월로 단위로 설정하여 조회하셔야 합니다.</li>
+                    <!-- <li>[다운받기]를 클릭하시면 엑셀자료로 다운받으실 수 있습니다.</li> -->
+                </ul>
+            </div>
+
+            <div class="panel bs-callout-sub bs-callout-primary">
+                <div class="panel-body" >
+                    <form id="frm" name="frm" action="/subRecom/recomList.do" method="get" class="form-inline">
+                        <label>검색기간&nbsp;:&nbsp;</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control datepicker" name="searchStartDate" id="searchStartDate" value="${requestParam.searchStartDate }" readonly="readonly" onchange="javascript:chgDate(this.value);" />
+                            <label for="searchStartDate" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></label>
+                        </div>
+                        <label>&nbsp;~&nbsp;</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control datepicker" name="searchEndDate" id="searchEndDate" value="${requestParam.searchEndDate }" readonly="readonly" onchange="javascript:chgDate(this.value);" />
+                            <label for="searchEndDate" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></label>
+                        </div>
+                        <div class="input-group input-group-sm">&nbsp;&nbsp;&nbsp;</div>
+                        <div class="input-group input-group-sm">
+                            <button type="button" class="btn btn-primary btn_search" id="btn_search">검색</button>
+                            <!-- <button type="button" class="btn btn-primary btn_search_tatal" id="btn_search_tatal">합계</button> -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="data_body">
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                        <tr>
+                            <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 합계</td>
+                        </tr>
+                        <tr>
+                            <td height="10"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" cellpadding="0"	cellspacing="1" bgcolor="#ffffff">
+                                    <tbody>
+                                    <tr>
+                                        <td height="2" bgcolor="2274BB"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+
+                                <table id="salesTotal" width="100%" border="0" cellpadding="6" cellspacing="1"	bgcolor="#ffffff" class="table table-bordered">
+                                    <tbody>
+                                    <tr>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">총 주문건수</td>
+                                        <td align="center" bgcolor="337AB7" class="admin_tabletop">총 매출액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소금액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 주문건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 매출금액</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                        <td align="right" bgcolor="f5f5f5">0</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <table width="100%" border="0" cellpadding="0" cellspacing="1"	bgcolor="#ffffff">
+                                    <tbody>
+                                    <tr>
+                                        <td height="2" bgcolor="e3e3e3"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                        <tr>
+                            <td height="30"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                        <tr>
+                            <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 상세내역</td>
+                        </tr>
+                        <tr>
+                            <td height="10"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ffffff">
+                                    <tbody>
+                                    <tr>
+                                        <td height="2" bgcolor="2274BB"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                <table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#ffffff" class="table table-bordered">
+                                    <tbody>
+                                    <tr>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">주문일자</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">총 주문건수</td>
+                                        <td align="center" bgcolor="337AB7" class="admin_tabletop">총 매출금액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소금액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입급건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금액</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 주문건수</td>
+                                        <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 매출금액</td>
+                                    </tr>
+
+
+
+
+
+                                    <tr>
+                                        <td align="center" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                        <td align="right" bgcolor="337AB7" class="admin_tabletop">0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table width="100%" border="0" cellpadding="0" cellspacing="1"	bgcolor="#ffffff">
+                                    <tbody>
+                                    <tr>
+                                        <td height="2" bgcolor="e3e3e3"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

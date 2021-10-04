@@ -6,7 +6,7 @@
 <body>
 <h1>Simple Login</h1>
 <h3 sec:authorize="isAuthenticated()">반갑습니다. <span sec:authentication="name"></span>님!</h3>
-<a sec:authorize="isAnonymous()" th:href="@{/adminPartner/login}">로그인</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/adminPartner/logout}">로그아웃</a>
+<a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+<a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
 </body>
 </html>

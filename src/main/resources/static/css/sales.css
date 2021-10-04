@@ -1,0 +1,26 @@
+.container {
+    width: 100%;
+}
+
+.table-search-header label {
+    margin-right: 10px;
+}
+
+.file-del {
+    margin: 10px 0px;
+    display: -webkit-inline-box;
+    width: 200px;
+}
+
+.form-group .form-control.inline-input {
+    display: inline-block;
+    width: 94%;
+}
+
+.admin_tabletop {
+    FONT-SIZE: 12px;
+    COLOR: #ffffff;
+    FONT-FAMILY: "굴림";
+    TEXT-DECORATION: none;
+    font-weight: bold;
+}

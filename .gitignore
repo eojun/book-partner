@@ -26,3 +26,4 @@ out/
 !**/src/test/**/out/
 
 *.yml
+!**/src/main/resources/Wallet

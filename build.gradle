@@ -44,6 +44,7 @@ dependencies {
 	implementation 'commons-collections:commons-collections:3.2.2'
 	/*implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'*/
 	implementation group: 'com.github.zhanhb', name: 'thymeleaf-layout-dialect', version: '2.4.1'
+	implementation 'org.springframework.boot:spring-boot-devtools'
 }
 
 test {
