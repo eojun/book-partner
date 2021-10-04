@@ -1,0 +1,11 @@
+div#contents {width:640px;text-align:center;margin:0 auto}
+div#table_contents {width:960px;text-align:center;margin:0 auto}
+
+.sentence-img-wrap{width:640px;height:640px}
+
+.sentence-img,
+.sentence-img img{max-width:640px;max-height:640px}
+.sentence-notice{font-style: italic;margin:20px 0}
+.sentence-buttons{margin:20px 0}
+
+#page-wrapper{min-height:1000px;}

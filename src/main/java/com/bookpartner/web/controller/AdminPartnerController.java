@@ -15,7 +15,12 @@ public class AdminPartnerController {
 
     @GetMapping("/adminPartner/login")
     public String login(){
-        return "/adminPartner/loginForm";
+        return "/login";
+    }
+
+    @GetMapping("/test")
+    public String index2(){
+        return "/home/index2";
     }
 
 }
