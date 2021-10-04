@@ -1,0 +1,57 @@
+#local
+spring:
+  profiles:
+    active: "default"
+  main:
+    allow-bean-definition-overriding: true
+  mvc.view:
+    prefix: /WEB-INF/views/
+    suffix: .jsp
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@mydb2_high?TNS_ADMIN=./src/main/resources/Wallet
+    username: "ADMIN"
+    password:
+    initial-size: 2
+    max-active: 10
+    max-idle: 5
+    min-idle: 2
+    max-wait: 3000
+    testOnBorrow: true
+    testWhileIdle: true
+    validation-interval: 20000
+    validation-query: SELECT 1 from dual
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+
+
+server:
+  port: 8440
+  tomcat:
+    basedir: ./
+    accesslog:
+      enabled: true
+      pattern: "%{yyyy-MM-dd HH:mm:ss}t %a %s \"%r\" %b (%D ms)"
+      directory: log
+      suffix: .log
+      prefix: access
+
+app:
+  templates: "src/main/resources/"
+
+logging:
+  config: classpath:logback-spring-local.xml
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR
+servlet:
+  multipart:
+    location: D:\tmp
