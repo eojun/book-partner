@@ -1,0 +1,297 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 합계</td>
+  </tr>
+  <tr>
+    <td height="10"></td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ffffff">
+        <tr>
+          <td height="2" bgcolor="509a9b"></td>
+        </tr>
+      </table>
+
+      <table width="100%" border="0" cellpadding="6" cellspacing="1"	bgcolor="#ffffff" class="table table-bordered">
+        <tr>
+          <td rowspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">지불형태</td>
+          <td colspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">총 주문</td>
+          <td colspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">주문취소</td>
+          <td colspan="2" align="center" bgcolor="95AEC3" class="admin_tabletop">정산매출 구분</td>
+        </tr>
+        <tr>
+          <td width="120" align="center" bgcolor="337AB7" class="admin_tabletop">건수</td>
+          <td width="140" align="center" bgcolor="337AB7" class="admin_tabletop">매출금액</td>
+          <td width="120" align="center" bgcolor="337AB7" class="admin_tabletop">건수</td>
+          <td width="140" align="center" bgcolor="337AB7" class="admin_tabletop">취소금액</td>
+          <td width="100" align="center" bgcolor="95AEC3" class="admin_tabletop">정산매출 건수</td>
+          <td width="140" align="center" bgcolor="95AEC3" class="admin_tabletop">정산매출 금액</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5"><span style='font-weight:bold'>사이버머니</span></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_order_sum.cyber_money_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_order_sum.cyber_money,0,'COMMA', 0, 'POINT') }"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.cyber_money_count,0,'COMMA', 0, 'POINT') }"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.cyber_money,0,'COMMA', 0, 'POINT') }"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.cyber_money_count - calc_cancel_sum.cyber_money_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.cyber_money + calc_cancel_sum.cyber_money,0,'COMMA', 0, 'POINT') }"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>신용카드</span></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_order_sum.credit_card_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_order_sum.credit_card,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.credit_card_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.credit_card,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.credit_card_count - calc_cancel_sum.credit_card_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.credit_card + calc_cancel_sum.credit_card,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>현대카드</span></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_order_sum.hy_credit_card_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_order_sum.hy_credit_card,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.hy_credit_card_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.hy_credit_card,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.hy_credit_card_count - calc_cancel_sum.hy_credit_card_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.hy_credit_card + calc_cancel_sum.hy_credit_card,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5"><span style='font-weight:bold'>무통장입금</span></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_order_sum.virtual_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_order_sum.virtual,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_cancel_sum.virtual_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.virtual,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.virtual_count - calc_cancel_sum.virtual_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.virtual + calc_cancel_sum.virtual,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>휴대폰</span></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_order_sum.cell_phone_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_order_sum.cell_phone,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.cell_phone_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.cell_phone,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.cell_phone_count - calc_cancel_sum.cell_phone_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.cell_phone + calc_cancel_sum.cell_phone,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5"><span style='font-weight:bold'>리브로캐쉬</span></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_order_sum.libro_cash_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_order_sum.libro_cash,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_cancel_sum.libro_cash_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.libro_cash,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.libro_cash_count - calc_cancel_sum.libro_cash_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.libro_cash + calc_cancel_sum.libro_cash,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>계좌이체</span></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_order_sum.transfer_account_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_order_sum.transfer_account,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.transfer_account_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.transfer_account,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.transfer_account_count - calc_cancel_sum.transfer_account_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.transfer_account + calc_cancel_sum.transfer_account,0,'COMMA', 0, 'POINT')}"><</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5"><span style='font-weight:bold'>OK캐쉬백</span></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_order_sum.ok_cashback_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_order_sum.ok_cashback,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_cancel_sum.ok_cashback_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.ok_cashback,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.ok_cashback_count - calc_cancel_sum.ok_cashback_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.ok_cashback + calc_cancel_sum.ok_cashback,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3" class="line-through"><span style='font-weight:bold'>마일리지</span></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${calc_order_sum.mileage_count}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${#numbers.formatDecimal(calc_order_sum.mileage,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${calc_cancel_sum.mileage_count}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${#numbers.formatDecimal(calc_cancel_sum.mileage,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5" class="line-through"><span style='font-weight:bold'>할인쿠폰</span></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_order_sum.dis_coupon_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_order_sum.dis_coupon,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_cancel_sum.dis_coupon_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_cancel_sum.dis_coupon,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3" class="line-through"><span style='font-weight:bold'>상품할인쿠폰</span></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${calc_order_sum.goods_dis_coupon_count}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${#numbers.formatDecimal(calc_order_sum.goods_dis_coupon,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${calc_cancel_sum.goods_dis_coupon_count}"></td>
+          <td align="right" bgcolor="e3e3e3" class="line-through" th:text="${#numbers.formatDecimal(calc_cancel_sum.goods_dis_coupon,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5" class="line-through"><span style='font-weight:bold'>교환차액</span></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_order_sum.exchange_amount_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_order_sum.exchange_amount,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_cancel_sum.exchange_amount_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_cancel_sum.exchange_amount,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop line-through">0</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>기타</span></td>
+          <td align="right" bgcolor="e3e3e3">0</td>
+          <td align="right" bgcolor="e3e3e3">0</td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.etc_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.etc,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_cancel_sum.etc_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_cancel_sum.etc,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5"><span style='font-weight:bold'>예치금</span></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_order_sum.deposit_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_order_sum.deposit,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${calc_cancel_sum.deposit_count}"></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(calc_cancel_sum.deposit,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.deposit_count - calc_cancel_sum.deposit_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.deposit + calc_cancel_sum.deposit,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="e3e3e3"><span style='font-weight:bold'>ST빌링</span></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_order_sum.st_billing_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_order_sum.st_billing,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${calc_cancel_sum.st_billing_count}"></td>
+          <td align="right" bgcolor="e3e3e3" th:text="${#numbers.formatDecimal(calc_cancel_sum.st_billing,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${calc_order_sum.st_billing_count - calc_cancel_sum.st_billing_count}"></td>
+          <td align="right" bgcolor="95AEC3" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.st_billing + calc_cancel_sum.st_billing,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="f5f5f5" class="line-through"><span style='font-weight:bold'>포인트</span></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_order_sum.point_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_order_sum.point,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${calc_cancel_sum.point_count}"></td>
+          <td align="right" bgcolor="f5f5f5" class="line-through" th:text="${#numbers.formatDecimal(calc_cancel_sum.point,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="95AEC3" class="line-through admin_tabletop">0</td>
+          <td align="right" bgcolor="95AEC3" class="line-through admin_tabletop">0</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="5F94C2" class="admin_tabletop"><strong>합계</strong></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${calc_order_sum.order_count}"></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.pay_price,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${calc_cancel_sum.order_count}"></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_cancel_sum.pay_price,0,'COMMA', 0, 'POINT')}"><fmt:formatNumber value="${}" pattern="#,###,###,###" /></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.order_count - calc_cancel_sum.order_count,0,'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="5F94C2" class="admin_tabletop" th:text="${#numbers.formatDecimal(calc_order_sum.pay_price + calc_cancel_sum.pay_price,0,'COMMA', 0, 'POINT')}"></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1"
+             bgcolor="#ffffff">
+        <tr>
+          <td height="2" bgcolor="e3e3e3"></td>
+        </tr>
+
+      </table>
+
+
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+        <tr>
+          <td height="30"></td>
+        </tr>
+        </tbody>
+      </table>
+
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 상세내역</td>
+        </tr>
+        <tr>
+          <td height="10"></td>
+        </tr>
+        <tr>
+          <td>
+
+            <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ffffff">
+              <tr>
+                <td height="2" bgcolor="509a9b"></td>
+              </tr>
+            </table>
+
+            <table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#ffffff" class="table table-bordered">
+              <tr>
+                <td width="120" rowspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">주문일자</td>
+                <td colspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">총 주문</td>
+                <td colspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">주문취소</td>
+                <td width="120" rowspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">환불(예치금)</td>
+                <td colspan="2" align="center" bgcolor="337AB7" class="admin_tabletop">정산대상 내역</td>
+              </tr>
+              <tr>
+                <td width="90" align="center" bgcolor="337AB7" class="admin_tabletop">건수</td>
+
+                <td width="120" align="center" bgcolor="337AB7" class="admin_tabletop">커넥츠북결제</td>
+                <td width="90" align="center" bgcolor="337AB7" class="admin_tabletop">건수</td>
+                <td width="120" align="center" bgcolor="337AB7" class="admin_tabletop">커넥츠북결제</td>
+                <td width="90" align="center" bgcolor="337AB7" class="admin_tabletop">건수</td>
+                <td align="center" bgcolor="337AB7" class="admin_tabletop">매출금액</td>
+              </tr>
+
+
+
+              <c:set var = "sumOrderCount" value = "0" /><!-- 총 주문 건수 -->
+              <c:set var = "sumOrderPrice" value = "0" /><!-- 총 주문 커넥츠북 결제액 -->
+              <c:set var = "sumOrderCancelCount" value = "0" /><!-- 총 취소 건수 -->
+              <c:set var = "sumOrderCancelPrice" value = "0" /><!-- 총  커넥츠북 취소금액 -->
+
+              <c:set var = "sumDeposit" value = "0" /><!-- 총 환불(예치금) -->
+
+
+              <c:set var = "sumCalcCount" value = "0" /><!-- 총 정산대상 건수 -->
+              <c:set var = "sumCalcPrice" value = "0" /><!-- 총 정산대상 금액 -->
+
+              <div th:each="item : ${calc_detail_order_list}">
+                <tr>
+                  <td align="center" bgcolor="f5f5f5" th:text="${item.pay_auth_date}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_price_count}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_price}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_can_price_count}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_can_price}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.deposit_can}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_price_count - item.pay_can_price_count}"></td>
+                  <td align="right" bgcolor="f5f5f5" th:text="${item.pay_price + item.pay_can_price}"></td>
+                </tr>
+
+                <c:set var = "sumOrderCount" value = "${sumOrderCount + item.pay_price_count }" /><!-- 총 주문 건수 -->
+                <c:set var = "sumOrderPrice" value = "${sumOrderPrice + item.pay_price }" /><!-- 총 주문 커넥츠북 결제액 -->
+                <c:set var = "sumOrderCancelCount" value = "${sumOrderCancelCount + item.pay_can_price_count }" /><!-- 총 취소건수 -->
+                <c:set var = "sumOrderCancelPrice" value = "${sumOrderCancelPrice + item.pay_can_price }" /><!-- 총  커넥츠북 취소금액 -->
+                <c:set var = "sumDeposit" value = "${sumDeposit + item.deposit_can }" /><!-- 총 환불(예치금) -->
+                <c:set var = "sumCalcCount" value = "${sumCalcCount + item.pay_price_count - item.pay_can_price_count }" /><!-- 총 정산대상 건수 -->
+                <c:set var = "sumCalcPrice" value = "${sumCalcPrice + item.pay_price + item.pay_can_price }" /><!-- 총 정산대상 금액 -->
+              </div>
+
+              <tr>
+                <td width="75" align="center" bgcolor="337AB7" class="admin_tabletop"><b>합계</b></td>
+                <td width="70" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.?[pay_price_count != null].![pay_price_count]) ,0, 'COMMA', 0, 'POINT')}"></td>
+                <td width="90" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.?[pay_price != null].![pay_price]) ,0, 'COMMA', 0, 'POINT')}"></td>
+                <td width="90" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.?[pay_can_price_count != null].![pay_can_price_count]) ,0, 'COMMA', 0, 'POINT')}"></td>
+                <td width="80" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.?[pay_can_price != null].![pay_can_price]) ,0, 'COMMA', 0, 'POINT')}"></td>
+                <td width="80" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.?[deposit_can != null].![deposit_can]) ,0, 'COMMA', 0, 'POINT')}"></td>
+                <td width="70" align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.![pay_price_count - pay_can_price_count]),0, 'COMMA', 0, 'POINT')}"></td>
+                <td align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(calc_detail_order_list.![pay_price + pay_can_price]),0, 'COMMA', 0, 'POINT')}"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="1"
+                   bgcolor="#ffffff">
+              <tr>
+                <td height="2" bgcolor="e3e3e3"></td>
+              </tr>
+
+            </table>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

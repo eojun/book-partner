@@ -3,8 +3,8 @@ $(document).ready(function () {
     var $container  = $("#container");
     var _searchType = "${requestParam.searchType}";
     var _searchStatusType = "${requestParam.searchStatusType}";
-    var _searchStartDate = "${requestParam.searchStartDate}";
-    var _searchEndDate = "${requestParam.searchEndDate}";
+    var _searchStartDate = "";
+    var _searchEndDate = "";
 
     $container.find(".datepicker").datepicker({
         dateFormat: 'yy-mm-dd',
@@ -51,11 +51,19 @@ $(document).ready(function () {
 
 });
 
-function searchSalesListResult(){
+function chgDate(nowDate) {
+    var myDate = new Date(nowDate);
+}
 
+$('li.dropdown').on("click", function (){
+    $(this).toggleClass('open');
+});
+
+$("#searchByDay").on("click", function (){
     var startDate = $("#searchStartDate").val();
     var endDate = $("#searchEndDate").val();
     var period = 31; // 조회기간 31일
+    var searchDateCheck = calcPeriodDay(startDate,endDate,period);
     if ( searchDateCheck == false ){
         alert("검색기간의 간격은 31일이 최대 입니다!! 검색기간을 확인해 주십시요");
         return false;
@@ -63,17 +71,74 @@ function searchSalesListResult(){
     else{
         $('div.loading-wrap').show();
         var param = {searchStartDate:startDate,searchEndDate:endDate};
-        $.post( "/sale/ajaxSalesListDay.do",param,function( data ) {
+        $.post( "/sales/ajaxSalesListDay",param,function( data ) {
+            $('#data_body').html(data);
+            $('div.loading-wrap').hide();
+            return true;
+        });
+    }
+});
+
+$("#searchByOrderList").on("click", function (){
+    var startDate = $("#searchStartDate").val();
+    var endDate = $("#searchEndDate").val();
+    var period = 31; // 조회기간 31일
+    var searchDateCheck = calcPeriodDay(startDate,endDate,period);
+    if ( searchDateCheck == false ){
+        alert("검색기간의 간격은 31일이 최대 입니다!! 검색기간을 확인해 주십시요");
+        return false;
+    }
+    else{
+        $('div.loading-wrap').show();
+        var param = {searchStartDate:startDate,searchEndDate:endDate};
+        $.post( "/sales/ajaxSalesListDayOrderList",param,function( data ) {
             $('#data_body').html(data);
             $('div.loading-wrap').hide();
             return true;
         });
 
     }
+});
 
 
-}
+$("#searchCalc").on("click", function (){
+    var startDate = $("#searchStartDate").val();
+    var endDate = $("#searchEndDate").val();
+    var period = 31; // 조회기간 31일
 
-$('li.dropdown').on("click", function (){
-    $(this).toggleClass('open');
+    var searchDateCheck = calcPeriodDay(startDate,endDate,period);
+    if ( searchDateCheck == false ){
+        alert("검색기간의 간격은 31일이 최대 입니다!! 검색기간을 확인해 주십시요");
+        return false;
+    }
+    else{
+        $('div.loading-wrap').show();
+        var param = {searchStartDate:startDate,searchEndDate:endDate};
+        $.post( "/sales/ajaxSalesListCalc",param,function( data ) {
+            $('#data_body').html(data);
+            $('div.loading-wrap').hide();
+            return true;
+        });
+    }
+});
+
+$("#searchRank").on("click", function (){
+    var startDate = $("#searchStartDate").val();
+    var endDate = $("#searchEndDate").val();
+    var period = 31; // 조회기간 31일
+    var searchDateCheck = calcPeriodDay(startDate,endDate,period);
+    if ( searchDateCheck == false ){
+        alert("검색기간의 간격은 31일이 최대 입니다!! 검색기간을 확인해 주십시요");
+        return false;
+    }
+    else{
+        $('div.loading-wrap').show();
+        var param = {searchStartDate:startDate,searchEndDate:endDate};
+        $.post( "/sales/ajaxSalesRankList",param,function( data ) {
+            $('#data_body').html(data);
+            $('div.loading-wrap').hide();
+            return true;
+        });
+
+    }
 });

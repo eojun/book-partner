@@ -18,10 +18,6 @@ public class SearchIndexGoodsService {
         return searchIndexGoodsRepository.getNaverBookDtoList();
     }
 
-    public List<NaverBookDto> getNaverBookDtoListByNative() {
-        return searchIndexGoodsRepository.getNaverBookDtoListByNative();
-    }
-
     /*public List<NaverBookEntity> getNaverBookDtoListByMybatis() {
         return searchIndexGoodsRepository.getNaverBookDtoListByMybatis();
     }*/

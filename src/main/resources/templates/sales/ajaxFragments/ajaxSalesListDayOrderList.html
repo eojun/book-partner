@@ -1,0 +1,139 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+  <tr>
+    <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 합계</td>
+  </tr>
+  <tr>
+    <td height="10"></td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellpadding="0"	cellspacing="1" bgcolor="#ffffff">
+        <tbody>
+        <tr>
+          <td height="2" bgcolor="2274BB"></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table id="salesTotal" width="100%" border="0" cellpadding="6" cellspacing="1"	bgcolor="#ffffff" class="table table-bordered">
+        <tbody>
+        <tr>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">총 주문건수</td>
+          <td align="center" bgcolor="337AB7" class="admin_tabletop">총 매출액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소건수</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금건수</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 주문건수</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 매출금액</td>
+        </tr>
+
+        <tr>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.order_order_count, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.pay_price_order, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.order_cancel_count, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.pay_price_cancel*-1, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.pay_price_virtual_count, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.pay_price_virtual, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.order_order_count - result.order_cancel_count, 0, 'COMMA', 0, 'POINT')}" ></td>
+          <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(result.pay_price_order + result.pay_price_cancel, 0, 'COMMA', 0, 'POINT')}" ></td>
+        </tr>
+
+        </tbody>
+      </table>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1"	bgcolor="#ffffff">
+        <tbody>
+        <tr>
+          <td height="2" bgcolor="e3e3e3"></td>
+        </tr>
+
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+  <tr>
+    <td height="30"></td>
+  </tr>
+  </tbody>
+</table>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+  <tr>
+    <td><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 상세내역</td>
+  </tr>
+  <tr>
+    <td height="10"></td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ffffff">
+        <tbody>
+        <tr>
+          <td height="2" bgcolor="2274BB"></td>
+        </tr>
+
+        </tbody>
+      </table>
+
+
+      <table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#ffffff" class="table table-bordered">
+        <tbody>
+        <tr>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">주문일자</td>
+          <td width="120" align="center" bgcolor="337AB7" class="admin_tabletop">주문번호</td>
+          <td width="80" align="center" bgcolor="337AB7" class="admin_tabletop">고객명</td>
+          <td align="center" bgcolor="337AB7" class="admin_tabletop">주문내역</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">주문금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">취소금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">미 입금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">순 매출금액</td>
+          <td width="100" align="center" bgcolor="337AB7" class="admin_tabletop">주문상태</td>
+        </tr>
+
+        <div th:each="item : ${salesOrderDailyList}">
+          <tr>
+            <td align="center"bgcolor="f5f5f5" th:text="${item.pay_auth_date}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${item.ord_order_id}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${item.ord_cust_name}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${item.ord_good_name}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(item.pay_price,0, 'COMMA', 0, 'POINT')}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal((item.pay_can_price*-1),0, 'COMMA', 0, 'POINT')}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(item.pay_price_virtual,0, 'COMMA', 0, 'POINT')}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${#numbers.formatDecimal(item.pay_price_pure,0, 'COMMA', 0, 'POINT')}"></td>
+            <td align="right" bgcolor="f5f5f5" th:text="${item.ord_status_txt}"></td>
+          </tr>
+        </div>
+
+        <tr>
+          <td align="center" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(salesOrderDailyList.?[pay_price != null].![pay_price]) ,0, 'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(salesOrderDailyList.?[pay_can_price != null].![pay_can_price*-1]) ,0, 'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(salesOrderDailyList.?[pay_price_virtual != null].![pay_price_virtual]) ,0, 'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop" th:text="${#numbers.formatDecimal(#aggregates.sum(salesOrderDailyList.?[pay_price_pure != null].![pay_price_pure]) ,0, 'COMMA', 0, 'POINT')}"></td>
+          <td align="right" bgcolor="337AB7" class="admin_tabletop">&nbsp;</td>
+        </tr>
+        </tbody>
+      </table>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1"	bgcolor="#ffffff">
+        <tbody>
+        <tr>
+          <td height="2" bgcolor="e3e3e3"></td>
+        </tr>
+
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>

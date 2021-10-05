@@ -27,14 +27,23 @@ public class SalesController extends BaseController{
     private final OrderGoodsService orderGoodsService;
 
     @GetMapping("/salesListDay")
-    public String salesListDay(Model model){
-
-        UserDetailsImpl user =  getSecurityContextUser();
-
-        Map requestParam = getParameterMap();
-        model.addAttribute("requestParam", requestParam);
-
+    public String salesListDay(){
         return "sales/salesListDay";
+    }
+
+    @GetMapping("/salesListDayOrderList")
+    public String salesListDayOrderList(){
+        return "sales/salesListDayOrderList";
+    }
+
+    @GetMapping("/salesListCalc")
+    public String salesListCalc(){
+        return "sales/salesListCalc";
+    }
+
+    @GetMapping("/salesRankList")
+    public String salesRankList(){
+        return "sales/salesRankList";
     }
 
     // 일일 주문내역(일자별),일일 주문내역(주문목록) 합계 Ajax
@@ -55,7 +64,7 @@ public class SalesController extends BaseController{
         model.addAttribute("salesSumDaily", salesSumDaily);
         model.addAttribute("requestParam", requestParam);
 
-        return "sales/ajaxData/ajaxSalesListDay2";
+        return "sales/ajaxFragments/ajaxSalesListDay";
     }
 
     @PostMapping(path="/ajaxSalesListDayOrderList" )
@@ -76,7 +85,7 @@ public class SalesController extends BaseController{
         model.addAttribute("salesOrderDailyList",salesOrderDailyList);
         model.addAttribute("requestParam", requestParam);
 
-        return "sales/ajaxData/ajaxSalesListDayOrderList2";
+        return "sales/ajaxFragments/ajaxSalesListDayOrderList";
     }
 
     @PostMapping(path="/ajaxSalesListCalc")
@@ -99,7 +108,7 @@ public class SalesController extends BaseController{
 
         model.addAttribute("requestParam", requestParam);
 
-        return "sales/ajaxData/ajaxSalesListCalc2";
+        return "sales/ajaxFragments/ajaxSalesListCalc";
     }
 
     // 상품주문 순위 Ajax
@@ -119,7 +128,7 @@ public class SalesController extends BaseController{
         model.addAttribute("requestParam", requestParam);
 
 
-        return "sales/ajaxData/ajaxSalesRankList2";
+        return "sales/ajaxFragments/ajaxSalesRankList";
     }
 
 }

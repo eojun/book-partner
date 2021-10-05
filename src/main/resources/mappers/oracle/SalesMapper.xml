@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SalesMapper">
+
+	<!-- 일일주문내역 > 일자별 > 합계1 -->
+	<select id="selectSalesListDaySum" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    NVL(SUM("PAY_PRICE_ORDER"), 0) "PAY_PRICE_ORDER",                           /* 결제액 */
+		    NVL(SUM("PAY_PRICE_CANCEL"), 0) "PAY_PRICE_CANCEL",                         /* 취소액 */
+		    NVL(SUM(DISTINCT("PAY_PRICE_VIRTUAL")), 0) "PAY_PRICE_VIRTUAL",             /* 미 입 금 액 */
+		    NVL(COUNT(DISTINCT("PAY_PRICE_VIRTUAL")), 0) "PAY_PRICE_VIRTUAL_COUNT"      /* 미 입 금 액 수 */
+		FROM
+		    (
+		        SELECT
+		            ORD_ORDER_ID,
+		            <!-- DECODE(
+		                PAY_CODE, '4481', 0, '4418', 0, '4429', 0, '4451', 0, 
+		                DECODE(PAY_STATUS, '2601', PAY_PRICE)
+		            ) -->
+		            DECODE(PAY_STATUS, '2601', PAY_PRICE) "PAY_PRICE_ORDER",
+		            (
+		                SELECT
+		                    SUM(PAY_PRICE)
+		                FROM
+		                    SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS B
+		                WHERE
+		                    PAY_ORDER_ID = B.ORD_ORDER_ID
+		                    AND ORD_STATUS != '4043'
+		                    AND PAY_ORDER_ID = C.ORD_ORDER_ID
+		                    AND PAY_STATUS = '2602'
+		            ) "PAY_PRICE_VIRTUAL",
+		            <!-- DECODE(
+		                PAY_CODE, '4481', 0, '4421', 0, '4442', 0, '4438', 0, '4418', 0, '4429', 0, '4451', 0, 
+		                DECODE(PAY_STATUS, '2603', PAY_PRICE)
+		            ) -->
+		            DECODE(PAY_STATUS, '2603', PAY_PRICE) "PAY_PRICE_CANCEL",
+		            ORD_GOOD_NAME,
+		            ORD_CUST_NAME,
+		            ORD_STATUS
+		        FROM
+		            SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS C
+		        WHERE
+		            PAY_ORDER_ID = ORD_ORDER_ID
+		            AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		            AND ORD_STATUS NOT IN ('4001', '4002')
+		            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		    )
+	</select>
+	
+	<!-- 일일주문내역 > 일자별 > 합계 : 총 주문수 -->
+	<select id="selectSalesListDaySumOrderCount" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="int" >
+		SELECT
+		    COUNT(1) CNT      /* 총 주문수 */
+		FROM
+		    SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS
+		WHERE
+		    PAY_ORDER_ID = ORD_ORDER_ID
+		    AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		    AND TRIM(PAY_PRIMARY) = '1'
+		    AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+	</select>
+	
+	<!-- 일일주문내역 > 일자별 > 합계 : 총 취소 주문수 -->
+	<select id="selectSalesListDaySumOrderCancelCount" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="int" >
+		SELECT
+		    COUNT(1) CNT         /* 총 취소 주문수 */
+		FROM
+		    SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS
+		WHERE
+		    PAY_ORDER_ID = ORD_ORDER_ID
+		    AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		    AND TRIM(PAY_PRIMARY) = '1'
+		    AND TRIM(ORD_STATUS) = '4043'
+		    AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+	</select>
+	<!-- 일일주문내역 > 일자별 > 상세내역 -->
+	<select id="selectSalesDayDetailList" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    PAY_AUTH_DATE AS SETTLE_DATE,
+		    NVL(SUM(PAY_PRICE_ORDER), 0) PAY_PRICE_ORDER,                           /* 결제 */
+		    NVL(SUM(PAY_PRICE_CANCEL), 0) PAY_PRICE_CANCEL,                         /* 취소 */
+		    NVL(SUM(PAY_ORDER_COUNT), 0) PAY_ORDER_COUNT,                           /* 결제수 */
+		    NVL(SUM(PAY_CANCEL_COUNT), 0) PAY_CANCEL_COUNT,                         /* 취소수 */
+		    NVL(SUM(DISTINCT(PAY_PRICE_VIRTUAL)), 0) PAY_PRICE_VIRTUAL,             /* 미 입금액 */
+		    NVL(COUNT(DISTINCT(PAY_PRICE_VIRTUAL)), 0) PAY_PRICE_VIRTUAL_COUNT      /* 미 입금액 수*/
+		FROM
+		    (
+		        SELECT
+		            PAY_AUTH_DATE,
+		            DECODE(PAY_STATUS, '2601', PAY_PRICE) PAY_PRICE_ORDER,
+		            DECODE(PAY_PRIMARY, '1', 1) PAY_ORDER_COUNT,
+		            (
+		                SELECT
+		                    PAY_PRICE
+		                FROM
+		                    SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS B
+		                WHERE
+		                    PAY_ORDER_ID = B.ORD_ORDER_ID
+		                    AND ORD_STATUS != '4043'
+		                    AND B.PAY_STATUS = '2601'
+		                    AND PAY_ORDER_ID = C.ORD_ORDER_ID
+		                    AND PAY_STATUS = '2602'
+		            ) PAY_PRICE_VIRTUAL,
+		            DECODE(PAY_STATUS, '2603', PAY_PRICE) PAY_PRICE_CANCEL,
+		            DECODE(ORD_STATUS || PAY_PRIMARY, '40431', 1) PAY_CANCEL_COUNT,
+		            ORD_GOOD_NAME,
+		            ORD_CUST_NAME,
+		            ORD_STATUS
+		        FROM
+		            SW_LIBRO.PAY_INFO B,SW_LIBRO.ORDERS C
+		        WHERE
+		            PAY_ORDER_ID = ORD_ORDER_ID
+		            AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		            AND ORD_STATUS NOT IN ('4002', '4001')
+		            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		    )
+		GROUP BY
+		    PAY_AUTH_DATE
+	</select>
+	
+	<!-- 일일주문내역 > 주문목록별 > 상세내역 -->
+	<select id="selectSalesOrderDetailList" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    ORD_ORDER_ID,
+		    SETTLE_DATE,
+		    ORD_GOOD_NAME,
+		    ORD_CUST_NAME,
+		    PAY_PRICE_PURE,
+		    PAY_PRICE,
+		    PAY_CAN_PRICE,
+		    PAY_PRICE_VIRTUAL,
+		    PAY_CANCEL_PRICE_VIRTUAL,
+		    ORD_STATUS_TXT
+		FROM
+		    (
+		        SELECT
+		            ORD_ORDER_ID,
+		            MAX(PAY_AUTH_DATE) SETTLE_DATE,
+		            MAX(ORD_GOOD_NAME) ORD_GOOD_NAME,                                           /*상 품 명 */
+		            MAX(ORD_CUST_NAME) ORD_CUST_NAME,                                           /*고 객 명*/
+		            NVL(SUM(PAY_PRICE_PURE), 0) PAY_PRICE_PURE,                                 /*순 결 제*/
+		            NVL(SUM(DISTINCT(PAY_PRICE)), 0) PAY_PRICE,                                 /*결 제*/
+		            NVL(SUM(PAY_CAN_PRICE), 0) PAY_CAN_PRICE,                                   /*취 소*/
+		            NVL(SUM(DISTINCT(PAY_PRICE_VIRTUAL)), 0) PAY_PRICE_VIRTUAL,                 /*미 입 금 액*/
+		            NVL(SUM(DISTINCT(PAY_CANCEL_PRICE_VIRTUAL)), 0) PAY_CANCEL_PRICE_VIRTUAL,   /*취 소 미 입 금 액*/
+		            MAX(ORD_STATUS_TXT) ORD_STATUS_TXT                                          /*상 태*/
+		        FROM
+		            (
+		                SELECT
+		                    ORD_ORDER_ID,
+		                    PAY_AUTH_DATE,
+		                    DECODE(PAY_STATUS, '2601', PAY_PRICE) PAY_PRICE,
+		                    ( DECODE(PAY_STATUS, '2601', PAY_PRICE,0) - (DECODE(PAY_STATUS, '2603', PAY_PRICE,0)*-1) ) PAY_PRICE_PURE,
+		                    (
+		                        SELECT
+		                            PAY_PRICE
+		                        FROM
+		                            SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS B
+		                        WHERE
+		                            PAY_ORDER_ID = B.ORD_ORDER_ID
+		                            AND PAY_ORDER_ID = C.ORD_ORDER_ID
+		                            AND ORD_STATUS != '4043'
+		                            AND PAY_STATUS = '2602'
+		                    ) PAY_PRICE_VIRTUAL,
+		                    (
+		                        SELECT
+		                            PAY_PRICE
+		                        FROM
+		                            SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS B
+		                        WHERE
+		                            PAY_ORDER_ID = B.ORD_ORDER_ID
+		                            AND PAY_ORDER_ID = C.ORD_ORDER_ID
+		                            AND TRIM(ORD_STATUS) = '4043'
+		                            AND PAY_STATUS = '2602'
+		                    ) PAY_CANCEL_PRICE_VIRTUAL,
+		                    DECODE(PAY_STATUS, '2603', PAY_PRICE) PAY_CAN_PRICE,
+		                    ORD_GOOD_NAME,
+		                    ORD_CUST_NAME,
+		                    DECODE(
+		                        ORD_STATUS,
+		                        '4008','입금대기',
+		                        '4009','주문완료',
+		                        '4015','재고확인중',
+		                        '4017','전송',
+		                        '4031','출고중',
+		                        '4041','출고',
+		                        '4042','주문일시보류',
+		                        '4043','전체취소'
+		                        ,ORD_STATUS
+		                    ) ORD_STATUS_TXT
+		                FROM
+		                    SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS C
+		                WHERE
+		                    PAY_ORDER_ID = ORD_ORDER_ID
+		                    AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		                    AND ORD_STATUS NOT IN ('4002', '4001')
+		                    AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		            )
+		        GROUP BY
+		            ORD_ORDER_ID
+		    )
+		ORDER BY
+		    SETTLE_DATE
+	</select>
+	
+	
+	<!-- 매출정산내역 > 합계 > 주문 -->
+	<select id="selectSalesCalcOrderSum" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    NVL(SUM(PAY_PRICE), 0) PAY_PRICE,       /*총 금 액*/
+		    NVL(SUM(CNT), 0) ORDER_COUNT,           /*총 건 수*/
+		    NVL(SUM(DECODE(PAY_CODE, '4459', PAY_PRICE, 0)), 0) ST_BILLING, /*ST빌링*/
+		    NVL(SUM(DECODE(PAY_CODE, '4459', CNT, 0)), 0) ST_BILLING_COUNT, /*ST빌링 건수*/
+		    NVL(SUM(DECODE(PAY_CODE, '4418', PAY_PRICE, 0)), 0) MILEAGE, /*"마 일 리 지",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4429', PAY_PRICE, 0)), 0) POINT, /*"포인트",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4421', PAY_PRICE, 0)), 0) DIS_COUPON, /*"할 인 쿠 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4402', PAY_PRICE, '4435', PAY_PRICE, '4484', PAY_PRICE, '4468', PAY_PRICE, 0)),0) CELL_PHONE, /*"휴 대 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4440', PAY_PRICE, 0)), 0) OK_CASHBACK, /*"OK 캐 쉬 백",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4442', PAY_PRICE, 0)), 0) GOODS_DIS_COUPON, /*"상 품 할 인 쿠 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4403', PAY_PRICE, '4446', PAY_PRICE, '4485', PAY_PRICE, '4469', PAY_PRICE, 0)),0) CREDIT_CARD, /*"신 용 카 드",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4444', PAY_PRICE, 0)), 0) HY_CREDIT_CARD, /*"현 대 카 드",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4400', PAY_PRICE, '4448', PAY_PRICE, '4415', PAY_PRICE, '4482', PAY_PRICE, '4466', PAY_PRICE, 0)),0) VIRTUAL, /*"무 통 장 입 금",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4438', PAY_PRICE, 0)), 0) DEPOSIT, /*"예 치 금",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4439', PAY_PRICE, 0)), 0) LIBRO_CASH, /*"리 브 로 캐 쉬",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4451', PAY_PRICE, 0)), 0) EXCANGE_AMOUNT, /*"교 환 차 액",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4404', PAY_PRICE, '4447', PAY_PRICE, '4483', PAY_PRICE, '4467', PAY_PRICE, 0)),0) TRANSFER_ACCOUNT, /*"계 좌 이 체",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4481', PAY_PRICE, 0)), 0) CYBER_MONEY, /*"사 이 버 머 니",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4418', CNT, 0)), 0) MILEAGE_COUNT, /*"마 일 리 지 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4429', CNT, 0)), 0) POINT_COUNT, /*"포인트 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4421', CNT, 0)), 0) DIS_COUPON_COUNT, /*"할 인 쿠 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4402', CNT, '4435', CNT, '4484', CNT, '4468', CNT, 0)),0) CELL_PHONE_COUNT, /*"휴 대 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4440', CNT, 0)), 0) OK_CASHBACK_COUNT, /*"캐 쉬 백 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4442', CNT, 0)), 0) GOODS_DIS_COUPON_COUNT, /*"상 품 할 인 쿠 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4403', CNT, '4446', CNT, '4485', CNT, '4469', CNT, 0)),0) CREDIT_CARD_COUNT, /*"신 용 카 드 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4444', CNT, 0)), 0) HY_CREDIT_CARD_COUNT, /*"현 대 카 드 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4400', CNT, '4448', CNT, '4415', CNT, '4482', CNT, '4466', CNT, 0)),0) VIRTUAL_COUNT, /*"무 통 장 입 금 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4439', CNT, 0)), 0) LIBRO_CASH_COUNT, /*"리 브 로 캐 쉬 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4404', CNT, '4447', CNT, '4483', CNT, '4467', CNT, 0)),0) TRANSFER_ACCOUNT_COUNT, /*"계 좌 이 체 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4451', CNT, 0)), 0) EXCANGE_AMOUNT_COUNT, /*"교 환 차 액 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4438', CNT, 0)), 0) DEPOSIT_COUNT, /*"예 치 금 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4481', CNT, 0)), 0) CYBER_MONEY_COUNT /*"사 이 버 머 니 건 수"*/
+		FROM
+		    (
+		        SELECT
+		            PAY_CODE,
+		            SUM(PAY_PRICE) PAY_PRICE,
+		            COUNT(*) CNT
+		        FROM
+		            SW_LIBRO.ORDERS,SW_LIBRO.PAY_INFO
+		        WHERE
+		            ORD_ORDER_ID = PAY_ORDER_ID
+		            AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		            AND TRIM(ORD_STATUS) NOT IN ('4001', '4002')
+		            AND PAY_STATUS = '2601'
+		        GROUP BY
+		            PAY_CODE
+		    ) 
+	</select>
+	
+	<!-- 매출정산내역 > 합계 > 취소 -->
+	<select id="selectSalesCalcCancelSum" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    NVL(SUM(PAY_PRICE), 0) PAY_PRICE, /*총 금 액*/
+		    NVL(SUM(CNT), 0) ORDER_COUNT, /*총 건 수*/
+		    NVL(SUM(DECODE(PAY_CODE, '4459', PAY_PRICE, 0)), 0) ST_BILLING, /*ST빌링*/
+		    NVL(SUM(DECODE(PAY_CODE, '4459', CNT, 0)), 0) ST_BILLING_COUNT, /*ST빌링 건수*/
+		    NVL(SUM(DECODE(PAY_CODE, '4418', PAY_PRICE, 0)), 0) MILEAGE, /*"마 일 리 지",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4429', PAY_PRICE, 0)), 0) POINT, /*"포인트",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4421', PAY_PRICE, 0)), 0) DIS_COUPON, /*"할 인 쿠 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4402', PAY_PRICE, '4435', PAY_PRICE, '4484', PAY_PRICE, '4468', PAY_PRICE, 0)),0) CELL_PHONE, /*"휴 대 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4440', PAY_PRICE, 0)), 0) OK_CASHBACK, /*"OK 캐 쉬 백",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4442', PAY_PRICE, 0)), 0) GOODS_DIS_COUPON, /*"상 품 할 인 쿠 폰",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4403', PAY_PRICE, '4446', PAY_PRICE, '4485', PAY_PRICE, '4469', PAY_PRICE, 0)),0) CREDIT_CARD, /*"신 용 카 드",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4444', PAY_PRICE, 0)), 0) HY_CREDIT_CARD, /*"현 대 카 드",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4400', PAY_PRICE, '4448', PAY_PRICE, '4415', PAY_PRICE, '4482', PAY_PRICE, '4466', PAY_PRICE, 0 )),0) VIRTUAL, /*"무 통 장 입 금",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4481', PAY_PRICE, 0)), 0) CYBER_MONEY, /*"사 이 버 머 니",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4438', PAY_PRICE, 0)), 0) DEPOSIT, /*"예 치 금",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4439', PAY_PRICE, 0)), 0) LIBRO_CASH, /*"리 브 로 캐 쉬",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4404', PAY_PRICE, '4447', PAY_PRICE, '4483', PAY_PRICE, '4467', PAY_PRICE, 0)),0) TRANSFER_ACCOUNT, /*"계 좌 이 체",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4451', PAY_PRICE, 0)), 0) EXCANGE_AMOUNT, /*"교 환 차 액",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4450', PAY_PRICE, 0)), 0) ETC, /*기 타,*/
+		    NVL(SUM(DECODE(PAY_CODE, '4418', CNT, 0)), 0) MILEAGE_COUNT, /*"마 일 리 지 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4429', CNT, 0)), 0) POINT_COUNT, /*"포인트 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4421', CNT, 0)), 0) DIS_COUPON_COUNT, /*"할 인 쿠 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4402', CNT, '4435', CNT, '4484', CNT, '4468', CNT, 0)),0) CELL_PHONE_COUNT, /*"휴 대 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4440', CNT, 0)), 0) OK_CASHBACK_COUNT, /*"캐 쉬 백 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4442', CNT, 0)), 0) GOODS_DIS_COUPON_COUNT, /*"상 품 할 인 쿠 폰 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4403', CNT, '4446', CNT, '4485', CNT, '4469', CNT, 0)),0) CREDIT_CARD_COUNT, /*"신 용 카 드 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4444', CNT, 0)), 0) HY_CREDIT_CARD_COUNT, /*"현 대 카 드 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4400', CNT, '4448', CNT, '4415', CNT, '4482', CNT, '4466', CNT, 0 )),0) VIRTUAL_COUNT, /*"무 통 장 입 금 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4481', CNT, 0)), 0) CYBER_MONEY_COUNT, /*"사 이 버 머 니 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4438', CNT, 0)), 0) DEPOSIT_COUNT, /*"예 치 금 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4451', CNT, 0)), 0) EXCANGE_AMOUNT_COUNT, /*"교 환 차 액 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4404', CNT, '4447', CNT, '4483', CNT, '4467', CNT, 0)),0) TRANSFER_ACCOUNT_COUNT, /*"계 좌 이 체 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4439', CNT, 0)), 0) LIBRO_CASH_COUNT, /*"리 브 로 캐 쉬 건 수",*/
+		    NVL(SUM(DECODE(PAY_CODE, '4450', CNT, 0)), 0) ETC_COUNT /*기 타 건 수*/
+		FROM
+		    (
+		        SELECT
+		            PAY_CODE,
+		            SUM(PAY_PRICE) PAY_PRICE,
+		            COUNT(*) CNT
+		        FROM
+		            SW_LIBRO.ORDERS,SW_LIBRO.PAY_INFO
+		        WHERE
+		            ORD_ORDER_ID = PAY_ORDER_ID
+		            AND TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		            AND TRIM(ORD_STATUS) NOT IN ('4001', '4002')
+		            AND PAY_STATUS = '2603'
+		        GROUP BY
+		            PAY_CODE
+		    ) 
+	</select>
+	
+	<!-- 매출정산내역 > 상세내역 > 주문(취소) 내역 -->
+	<select id="selectSalesCalcDetailOrderList" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		*
+		FROM(
+		        SELECT
+		            TO_CHAR(TO_DATE(B.WORK_YMD, 'YYYYMMDD'), 'YYYY-MM-DD') PAY_AUTH_DATE,
+		            NVL(LIBRO_PAY_METHOD_PRICE, 0) LIBRO_PAY_METHOD_PRICE,  /*리 브 로 결 제 수 단 별*/
+		            NVL(LIBRO_PAY_METHOD_COUNT, 0) LIBRO_PAY_METHOD_COUNT,  /*리 브 로 결 제 수 단 별 수*/
+		            NVL(DIS_COUPON, 0) DIS_COUPON   /*할 인 쿠 폰*/
+		        FROM
+		            (
+		                SELECT
+		                    PAY_AUTH_DATE,
+		                    NVL(SUM(LIBRO_PAY_METHOD_PRICE), 0) LIBRO_PAY_METHOD_PRICE,
+		                    NVL(SUM(LIBRO_PAY_METHOD_COUNT), 0) LIBRO_PAY_METHOD_COUNT, 
+		                    NVL(SUM(DIS_COUPON), 0) DIS_COUPON
+		                FROM
+		                    (
+		                        SELECT
+		                            -- DECODE(PAY_CODE, '4481', 0, '4418', 0, '4429', 0, '4451', 0, PAY_PRICE) LIBRO_PAY_METHOD_PRICE, 
+		                            -- DECODE(PAY_CODE, '4481', 0, '4418', 0, '4429', 0, '4451', 0, 1) LIBRO_PAY_METHOD_COUNT, 
+		                            -- DECODE(PAY_CODE, '4421', PAY_PRICE, '4442', PAY_PRICE, 0) DIS_COUPON,
+		                            PAY_PRICE LIBRO_PAY_METHOD_PRICE, 
+		                            1 LIBRO_PAY_METHOD_COUNT, 
+		                            DECODE(PAY_CODE, '4421', PAY_PRICE, '4442', PAY_PRICE, 0) DIS_COUPON, 
+		                            PAY_AUTH_DATE
+		                        FROM
+		                            SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS
+		                        WHERE
+		                            TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		                            AND ORD_STATUS NOT IN ('4001', '4002')
+		                            AND ORD_ORDER_ID = PAY_ORDER_ID
+		                            AND TRIM(PAY_STATUS) = '2601'
+		                            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		                    )
+		                GROUP BY
+		                    PAY_AUTH_DATE
+		                ORDER BY PAY_AUTH_DATE ASC
+		            ) A,SW_LIBRO.WORK_DAY B
+		        WHERE
+		            B.WORK_YMD BETWEEN TO_CHAR(TO_DATE(#{searchStartDate}, 'YYYY-MM-DD'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{searchEndDate}, 'YYYY-MM-DD'),'YYYYMMDD')
+		            AND PAY_AUTH_DATE(+) = TO_CHAR(TO_DATE(WORK_YMD, 'YYYYMMDD'), 'YYYY-MM-DD')
+		
+		    ) A FULL OUTER JOIN  (
+		
+		        SELECT
+		            TO_CHAR(TO_DATE(B.WORK_YMD, 'YYYYMMDD'), 'YYYY-MM-DD') WORK_DAY,
+		            NVL(LIBRO_PAY_CAN_PRICE, 0) LIBRO_PAY_CAN_PRICE,
+		            NVL(LIBRO_PAY_CAN_COUNT, 0) LIBRO_PAY_CAN_COUNT,
+		            NVL(LIBRO_PAY_CAN_METHOD_COUNT, 0) LIBRO_PAY_CAN_METHOD_COUNT,
+		            NVL(DIS_COUPON_CAN, 0) DIS_COUPON_CAN,
+		            NVL(DEPOSIT_CAN, 0) DEPOSIT_CAN
+		        FROM
+		            (
+		                SELECT
+		                    PAY_AUTH_DATE,
+		                    NVL(SUM(LIBRO_PAY_CAN_PRICE), 0) LIBRO_PAY_CAN_PRICE,               /*리브로 수단 별 취소액*/
+		                    COUNT(LIBRO_PAY_CAN_PRICE) LIBRO_PAY_CAN_COUNT,                     /*리브로 결제 취소 건 수*/
+		                    NVL(SUM(LIBRO_PAY_CAN_METHOD_COUNT), 0) LIBRO_PAY_CAN_METHOD_COUNT, /*리브로 결제 수단별 취소 건수*/
+		                    NVL(SUM(DIS_COUPON_CAN), 0) DIS_COUPON_CAN,                         /*할인쿠폰 취소액*/
+		                    NVL(SUM(DEPOSIT_CAN), 0) DEPOSIT_CAN                                /*환불 예치금*/
+		                FROM
+		                    (
+		                        SELECT
+		                            -- DECODE(PAY_CODE, '4481', 0, '4421', 0, '4442', 0, '4438', 0, '4418', 0, '4429', 0, '4451', 0, PAY_PRICE) LIBRO_PAY_CAN_PRICE, 
+		                            -- DECODE(PAY_CODE, '4481', 0, '4421', 0, '4442', 0, '4438', 0, '4418', 0, '4429', 0, '4451', 0, 1) LIBRO_PAY_CAN_METHOD_COUNT, 
+		                            PAY_PRICE LIBRO_PAY_CAN_PRICE, 
+		                            1 LIBRO_PAY_CAN_METHOD_COUNT, 
+		                            DECODE(PAY_CODE, '4421', PAY_PRICE, '4442', PAY_PRICE, 0) DIS_COUPON_CAN, 
+		                            DECODE(PAY_CODE, '4438', PAY_PRICE, 0) DEPOSIT_CAN, 
+		                            PAY_AUTH_DATE
+		                        FROM
+		                            SW_LIBRO.PAY_INFO,SW_LIBRO.ORDERS
+		                        WHERE
+		                            TRIM(UPPER(ORD_JOINS_ID)) = #{admJoinsId}
+		                            AND ORD_ORDER_ID = PAY_ORDER_ID
+		                            AND ORD_STATUS NOT IN ('4001', '4002') 
+		                            AND TRIM(PAY_STATUS) = '2603'
+		                            AND PAY_AUTH_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		                    )
+		                GROUP BY
+		                    PAY_AUTH_DATE
+		                ORDER BY PAY_AUTH_DATE ASC
+		            ) A,SW_LIBRO.WORK_DAY B
+		        WHERE
+		            B.WORK_YMD BETWEEN TO_CHAR(TO_DATE(#{searchStartDate}, 'YYYY-MM-DD'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{searchEndDate}, 'YYYY-MM-DD'),'YYYYMMDD')
+		            AND PAY_AUTH_DATE(+) = TO_CHAR(TO_DATE(WORK_YMD, 'YYYYMMDD'), 'YYYY-MM-DD')
+		
+		) B ON A.PAY_AUTH_DATE = B.WORK_DAY
+		WHERE 1=1
+	</select>
+
+	
+	<!-- 상품주문 순위 > 순위 -->
+	<select id="selectSalesRankList" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" >
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            ORG_GOODS_NAME,
+		            ORG_BUSI_NAME,
+		            ORG_GOODS_ID,
+		            ORG_ORD_NUMS,
+		            TOTALPRICE
+		        FROM
+		            (
+		                SELECT
+		                    /*+ RULE */
+		                    ORG_GOODS_NAME,
+		                    ORG_BUSI_NAME,
+		                    ORG_GOODS_ID,
+		                    NVL(SUM(ORG_ORD_NUMS), 0) ORG_ORD_NUMS,
+		                    <!-- TO_CHAR(
+		                        SUM(NVL(ORG_ORD_NUMS, 0) * NVL(ORG_SALE_PRICE, 0)),
+		                        '999,999,999,999'
+		                    ) TOTALPRICE -->
+		                    (
+		                        SUM(NVL(ORG_ORD_NUMS, 0) * NVL(ORG_SALE_PRICE, 0))
+		                    ) TOTALPRICE
+		                FROM
+		                    SW_LIBRO.ORDER_GOODS A, SW_LIBRO.ORDERS B
+		                WHERE
+		                    ORD_ORDER_ID = ORG_ORDER_ID
+		                    AND TRIM(ORD_STATUS) <![CDATA[>]]> '4001'
+		                    AND TRIM(A.ORG_STATE) NOT IN ('4130', '4131', '4160')
+		                    AND B.ORD_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+		                    AND SUBSTR(UPPER(ORD_JOINS_ID), 1, 10) = SUBSTR(TRIM(UPPER(#{admJoinsId})), 1, 10)
+		                GROUP BY
+		                    ORG_GOODS_NAME, ORG_BUSI_NAME, ORG_GOODS_ID
+		            )
+		        ORDER BY ORG_ORD_NUMS DESC, TOTALPRICE DESC
+		    )
+		WHERE
+		    ROWNUM <![CDATA[<]]> 51
+	</select>
+
+</mapper>

@@ -49,7 +49,7 @@ public abstract class DatabaseConfig {
 class OracleDatabaseConfig extends DatabaseConfig {
 
 	@Autowired
-	private com.bookpartner.config.db.OracleDatabaseProperties oracleDatabaseProperties;
+	private OracleDatabaseProperties oracleDatabaseProperties;
 
 	@Primary
 	@Bean(name = "oracleDataSource", destroyMethod = "close")

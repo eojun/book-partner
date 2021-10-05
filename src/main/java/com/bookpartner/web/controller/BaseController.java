@@ -2,7 +2,9 @@ package com.bookpartner.web.controller;
 
 import com.bookpartner.common.UserDetailsImpl;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -10,6 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -27,7 +30,11 @@ public class BaseController {
     }
 
     @GetMapping("/logout")
-    public String logout(){
+    public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
         return "/login";
     }
 

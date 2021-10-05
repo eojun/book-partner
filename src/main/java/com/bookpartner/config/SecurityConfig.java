@@ -28,25 +28,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception{
         // 인증 무시할 디렉토리 설정
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/static/css/**");
+        web.ignoring().antMatchers( "/static/**/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+
+        http.csrf().disable();
+
         http.authorizeRequests()
                 .antMatchers("/", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin() // 로그인 설정
                 .loginPage("/login") // custom login page
-                .defaultSuccessUrl("/sales/salesListDay") // 로그인 성공시 이동할 페이지
+                .defaultSuccessUrl("/", true) // 로그인 성공시 이동할 페이지
                 .permitAll()
                 .and()
             .logout()
+                .logoutUrl("/admin/logout.do")
                 .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true) // 세션 초기화
-                .and()
-            .exceptionHandling();
+                .deleteCookies("JSESSIONID");
     }
 
     @Override
