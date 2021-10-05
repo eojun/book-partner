@@ -1,7 +1,7 @@
 package com.bookpartner.service;
 
-import com.bookpartner.domain.AdminPartner;
-import com.bookpartner.domain.AdminPartnerRepository;
+import com.bookpartner.domain.adminpartner.AdminPartner;
+import com.bookpartner.domain.adminpartner.AdminPartnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor

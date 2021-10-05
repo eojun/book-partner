@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.4'
+	id 'org.springframework.boot' version '2.5.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
@@ -17,6 +17,11 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	profile = (!project.hasProperty('profile')) ? 'local' : profile
+	springBootVersion  = '2.5.5'
 }
 
 dependencies {
@@ -45,6 +50,8 @@ dependencies {
 	/*implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'*/
 	implementation group: 'com.github.zhanhb', name: 'thymeleaf-layout-dialect', version: '2.4.1'
 	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+	implementation 'org.apache.tomcat:tomcat-jdbc:9.0.2'
 }
 
 test {

@@ -1,4 +1,4 @@
-package com.bookpartner.domain;
+package com.bookpartner.domain.adminpartner;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,8 +1,7 @@
 package com.bookpartner.common;
 
-import com.bookpartner.domain.AdminPartner;
+import com.bookpartner.domain.adminpartner.AdminPartner;
 import com.bookpartner.service.AdminPartnerService;
-import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service(value="userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService { 

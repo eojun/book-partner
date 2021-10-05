@@ -1,4 +1,4 @@
-package com.bookpartner.domain;
+package com.bookpartner.domain.adminpartner;
 
 import lombok.Builder;
 import lombok.Getter;

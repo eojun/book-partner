@@ -1,11 +1,9 @@
 package com.bookpartner.web.dto;
 
-import com.bookpartner.domain.AdminPartner;
+import com.bookpartner.domain.adminpartner.AdminPartner;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
 
 @Getter
 @NoArgsConstructor

@@ -27,3 +27,8 @@ out/
 
 *.yml
 !**/src/main/resources/Wallet
+
+
+!**/src/main/**/resources/META-INF/persistence.xml
+!**/src/main/**/resources/logback-spring-dev.xml
+
