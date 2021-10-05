@@ -239,14 +239,14 @@ public class SearchIndexGoodsRepository {
     }
 
 
-    /*public List<NaverBookEntity> getNaverBookDtoListByMybatis(){
+    public List<NaverBookDto> getNaverBookDtoListByMybatis(){
 
-        NaverBookEntity naverBookEntity = new NaverBookEntity();
+        NaverBookDto naverBookDto = new NaverBookDto();
 
-        List<NaverBookEntity> list = sqlSession.selectList("NaverBookMapper.getNaverBookEntity", naverBookEntity);
+        List<NaverBookDto> list = sqlSession.selectList("NaverBookMapper.getNaverBookEntity", naverBookDto);
 
         return list;
-    }*/
+    }
 
 
 }

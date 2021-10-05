@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="NaverBookMapper"> 
+	
+	<resultMap id="naverBookDtoResultMap" type="NaverBookDto">
+		<id property="goods_id"				column="GOODS_ID" />
+		<result property="isbn"				column="ISBN" />
+		<result property="ebook_isbn"		column="EBOOK_ISBN" />
+		<result property="isbn_additional_sign"		column="ISBN_ADDITIONAL_SIGN" />
+		<result property="section"			column="SECTION" />
+		<result property="category_no"		column="CATEGORY_NO" />
+		<result property="category_no2"		column="CATEGORY_NO2" />
+		<result property="title"			column="TITLE" />
+		<result property="subtitle"			column="SUBTITLE" />
+		<result property="volume"			column="VOLUME" />
+		<result property="book_price"		column="BOOK_PRICE" />
+		<result property="author_name"		column="AUTHOR_NAME" />
+		<result property="author_code"		column="AUTHOR_CODE" />
+		<result property="translator"		column="TRANSLATOR" />
+		<result property="publisher"		column="PUBLISHER" />
+		<result property="publish_day"		column="PUBLISH_DAY" />
+		<result property="pages"			column="PAGES" />
+		<result property="image_url"		column="IMAGE_URL" />
+		<result property="image_url_2"		column="IMAGE_URL_2" />
+		<result property="description"		column="DESCRIPTION" />
+		<result property="author_intro"		column="AUTHOR_INTRO" />
+		<result property="contents"			column="CONTENTS" />
+		<result property="feature"			column="FEATURE" />
+		<result property="isadult"			column="ISADULT" />
+	</resultMap>
+	
+	<resultMap id="naverBookSaleProductDtoResultMap" type="NaverBookSaleProductDto">
+		<id property="goods_id"					column="GOODS_ID" />
+		<result property="isbn"					column="ISBN" />
+		<result property="count"				column="GCOUNT" />
+		<result property="price"				column="PRICE" />
+		<result property="price_disrate"		column="PRICE_DISRATE" />
+		<result property="point"				column="POINT" />
+		<result property="point_rate"			column="POINT_RATE" />
+		<result property="page_url"				column="PAGE_URL" />
+		<result property="page_url_mobile"		column="PAGE_URL_MOBILE" />
+		<result property="delivery_cost"		column="DELIVERY_COST" />
+		<result property="delivery_schedule"	column="DELIVERY_SCHEDULE" />
+		<result property="event"				column="EVENT_DESCRIPTION" />
+	</resultMap>
+
+	<resultMap id="naverBookSaleCountResultMap" type="NaverBookSellingCountDto">
+		<id property="goods_id"					column="GOODS_ID" />
+		<result property="sale_cnt"				column="SALE_CNT" />
+	</resultMap>
+	
+	<resultMap id="naverBookBestsellerProductDtoResultMap" type="NaverBookBestsellerProductDto">
+		<id property="goods_id"					column="GOODS_ID" />
+		<result property="isbn"					column="ISBN" />
+		<result property="rank"					column="RANK" />
+		<result property="rank_updown"			column="RANK_UPDOWN" />
+		<result property="best_category"		column="BEST_CATEGORY" />
+	</resultMap>
+	
+	<select id="getNaverBookDto" resultMap="naverBookDtoResultMap" parameterType="NaverBookDto" >
+		<![CDATA[
+		SELECT 
+				ISBN
+				,EBOOK_ISBN
+				,ISBN_ADDITIONAL_SIGN                              
+	            ,SECTION
+	            ,'<<<category_no>>>'||CATEGORY_NO CATEGORY_NO
+	            ,'<<<category_no2>>>'||CATEGORY_NO2 CATEGORY_NO2
+	            ,BOOK_GOODS_ID GOODS_ID
+	            ,TITLE
+	            ,SUBTITLE
+	            ,VOLUME
+	            ,BOOK_PRICE
+	            ,AUTHOR_NAME
+	            ,AUTHOR_CODE
+	            ,TRANSLATOR
+	            ,PUBLISHER
+	            ,PUBLISH_DAY
+	            ,PAGES
+	            ,IMAGE_URL
+	            ,IMAGE_URL_2
+	            ,DESCRIPTION
+	            ,AUTHOR_INTRO
+	            ,CONTENTS
+	            ,FEATURE
+	            ,ISADULT
+		  FROM (                              
+	            SELECT  
+	            		'<<<isbn>>>'||NVL(BARCODE, ISBN) ISBN
+	            		,'<<<ebook_isbn>>>' EBOOK_ISBN
+	            		,'<<<isbn_additional_sign>>>' ISBN_ADDITIONAL_SIGN
+	                    ,'<<<section>>>' SECTION
+	                    ,(SELECT COD_LIBRO_CODE FROM GOOD_CODE WHERE COD_GOODS_ID = A.GOODS_ID AND COD_PRIME_FLAG = '1' AND ROWNUM = 1) CATEGORY_NO
+	                    ,(SELECT COD_LIBRO_CODE FROM GOOD_CODE WHERE COD_GOODS_ID = A.GOODS_ID AND COD_PRIME_FLAG = '0' AND ROWNUM = 1) CATEGORY_NO2
+	                    ,'<<<goods_id>>>'||GOODS_ID BOOK_GOODS_ID
+	                    ,'<<<title>>>'||DAUM_BOOK_TITLE(GOODS_NAME) TITLE
+	                    ,'<<<subtitle>>>'||GOODS_SUB_NAME SUBTITLE
+	                    ,'<<<volume>>>' VOLUME
+	                    ,'<<<book_price>>>'||PRC_PRICE BOOK_PRICE
+						,'<<<author_name>>>'||TRIM(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM(F_AUTHOR_NAME_DAUMSHOP(GOODS_ID,'1'),'||'),'편집부||편집부','편집부'),'지음',''),'(지음)',''),'||',',')) AUTHOR_NAME
+	                    ,'<<<author_code>>>' AUTHOR_CODE
+	                    ,'<<<translator>>>'||TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM(F_AUTHOR_NAME_DAUMSHOP(GOODS_ID,'2'),'||'),'편집부||편집부','편집부'),'번역',''),'(번역)',''),'역',''),'(역)',''),'옮김',''),'||',',')) TRANSLATOR
+	                    ,'<<<publisher>>>'||REPLACE(REPLACE(REPLACE(REPLACE(PUB_NAME,'펴냄',''),'출간',''),'도서출판',''),'(주)','') PUBLISHER
+	                    ,'<<<publish_day>>>'||TO_CHAR(PUB_DATE,'yyyyMMdd') PUBLISH_DAY
+                    	,'<<<pages>>>'||(SELECT GOODS_PAGES FROM GOODS_ADD WHERE GOODS_ID = A.GOODS_ID AND ROWNUM = 1) PAGES
+	                    ,'<<<image_url>>>'||(F_GET_IMAGE(A.GOODS_ID, '0', '1')) IMAGE_URL
+	                    ,'<<<image_url_2>>>'||(F_GET_IMAGE(A.GOODS_ID, '0', '3')) IMAGE_URL_2
+	                    ,'<<<description>>>'||(SELECT replace(replace(replace(replace(replace(substr(CONT_INTRO,1,1000)||'<br><br>'||substr(CONT_DETAIL,1,1000),chr(13)||chr(10),'<br>'),chr(10),'<br>'),chr(9),'  '),'A HREF="/books/book_detail.asp?','A HREF="http://www.libro.co.kr/product/bookDetail?partner=daumshop&'),'a href="/books/book_detail.asp?','A HREF="http://www.libro.co.kr/product/bookDetail?partner=daumshop&') FROM GOOD_CONTENTS WHERE CONT_GOODS_ID = A.GOODS_ID and rownum =1) DESCRIPTION
+	                    ,'<<<author_intro>>>'||(SELECT replace(replace(replace(substr(GAUT_INFO,1,1000),chr(13)||chr(10),'<br>'),chr(10),'<br>'),chr(9),'  ') FROM GOOD_AUTHOR WHERE GAUT_GOODS_ID = A.GOODS_ID and GAUT_TYPE <> '02' and rownum =1) AUTHOR_INTRO
+	                    ,'<<<contents>>>'||(SELECT DBMS_LOB.SUBSTR(CONT_INDEX,1000) FROM GOOD_CONTENTS WHERE CONT_GOODS_ID = A.GOODS_ID and ROWNUM =1) CONTENTS
+	                    ,'<<<feature>>>' FEATURE
+	                    ,'<<<isadult>>>'||DECODE(NVL(A.GOODS_DEGREE,0), 19, 'Y', '') ISADULT
+	            FROM    SEARCH_INDEX_GOODS A
+	            WHERE   MALL_ID IN ('1','2','4','5','6')
+	                AND A.GOODS_STATUS <> '판매대기'
+	                AND A.GOODS_ID NOT IN (
+	                    '0060000657635','0060000693466','0060000764302','0060000006861','0060000007141',
+	                    '0060000008704','0060000006586','0060000007809'
+	                    )
+			        AND (A.GOODS_UPDATE_DATE BETWEEN SYSDATE-2 AND SYSDATE OR
+			              A.PRC_UPDATE_DATE  BETWEEN SYSDATE-2 AND SYSDATE)
+
+	            )
+		 ]]>
+	</select>
+	
+	<select id="getNaverBookSaleProductDto" resultMap="naverBookSaleProductDtoResultMap" parameterType="NaverBookSaleProductDto" >
+		<![CDATA[
+		SELECT '<<<isbn>>>'||ISBN ISBN                  
+                ,'<<<goods_id>>>'||GOODS_ID GOODS_ID                  
+                ,'<<<count>>>'||GCOUNT GCOUNT                  
+                ,'<<<price>>>'||SALEPRICE PRICE                  
+                ,'<<<price_disrate>>>'||PRICE_DISRATE PRICE_DISRATE                  
+                ,'<<<point>>>'||ROUND(PRICE * POINT_RATE / 100) POINT                  
+                ,'<<<point_rate>>>'||POINT_RATE POINT_RATE                  
+                ,'<<<page_url>>>https://book.conects.com/product/bookDetail?partner=naverbook&'||'goods_id='||GOODS_ID PAGE_URL
+                ,'<<<page_url_mobile>>>https://m-book.conects.com/product/bookDetail?partner=naverbook&'||'goods_id='||GOODS_ID PAGE_URL_MOBILE
+				,'<<<delivery_cost>>>'||CASE WHEN SALEPRICE >= DELIVERYAMT OR GOODS_FREE_FGT = 'Y' THEN '0' ELSE '2000' END DELIVERY_COST
+                ,'<<<delivery_schedule>>>'||DELIVERY_SCHEDULE DELIVERY_SCHEDULE                  
+                ,'<<<event>>>'||F_GET_PARTNER_EVENT_MEMO(GOODS_ID,'BUY','naverbook') EVENT_DESCRIPTION
+     	  FROM (
+				SELECT  A.ISBN               
+                        ,A.GOODS_ID                       
+                        ,A.MALL_ID       
+						,NVL(JSON_VALUE(F_GET_ORDERS_SETUP(TO_CHAR(SYSDATE,'YYYY-MM-DD'),'0301','Y'), '$.MEMBER_ORDER_PRICE'),'20000') DELIVERYAMT
+                        ,NVL((SELECT GOODS_SALE_COUNT FROM TEMP_GOODS_SALE_COUNT WHERE GOODS_ID = A.GOODS_ID AND ROWNUM = 1),0) GCOUNT                               
+                        ,A.PRC_PRICE PRICE
+                        ,A.PRC_SALEPRICE SALEPRICE               
+                        ,A.PRC_DISCOUNT_RATE PRICE_DISRATE                                       
+                        ,'1~3일' DELIVERY_SCHEDULE                       
+                        ,0 COUPON_PRICE                       
+                        ,NVL(A.PRC_GIVEN_MILEAGE,0) POINT_RATE   
+                        , NVL((SELECT GOODS_FREE_FGT FROM GOODS WHERE GOODS_ID=A.GOODS_ID),'N') GOODS_FREE_FGT                         
+                  FROM	SEARCH_INDEX_GOODS A
+                 WHERE  A.MALL_ID  IN ('1','2','4','5','6')                   
+				   AND 	A.GOODS_STATUS in ('정상','예약상품','발매예정')
+                   AND 	A.VISABLE_FLAG=1  
+				   AND  A.PRC_PRICE IS NOT NULL
+				   AND 	A.PRC_SALEPRICE IS NOT NULL
+				   AND 	A.GOODS_ID NOT IN (
+                          '0200000855833','0200000855840','0200000855857','0200000855864','0200000855871',
+                          '0200000855888','0200000855895','0200000856052','0200000855901','0200000855918',
+                          '0200000856069','0200000855925','0200000855932','0200000855949','0200000855956',
+                          '0200000855963','0200000856076','0200000855970','0200000855987','0200000855994',
+                          '0200000856007','0200000856014','0200000856021','0200000856038','0200000856045',
+                          '0100010196998'
+                        )
+          		)
+		 ]]>
+	</select>
+	
+	
+	<select id="getNaverBookSellingCount" resultMap="naverBookSaleCountResultMap" parameterType="NaverBookSellingCountDto" >
+		<![CDATA[
+			SELECT 
+			    '<<<goods_id>>>'||D.ORG_GOODS_ID GOODS_ID
+			    ,'<<<count>>>'||COUNT(1) SALE_CNT
+			
+			FROM ORDERS O
+			    INNER JOIN ORDER_GOODS D ON D.ORG_ORDER_ID = O.ORD_ORDER_ID
+			WHERE O.ORD_PAY_DATE BETWEEN TO_CHAR(SYSDATE-1,'YYYY-MM-DD') AND TO_CHAR(SYSDATE-1,'YYYY-MM-DD')
+			    AND O.ORD_PAY_DATE != 'N'
+			    AND O.ORD_STATUS NOT IN ('4001', '4002', '4008')
+			    AND D.ORG_STATE NOT IN ('4101')
+			    AND D.ORG_BAS_GOODS_ID = 'B'
+			    AND D.ORG_SET_TYPE IN ('D','S','T')
+			    AND O.ORD_JOINS_ID = 'NAVERBOOK'
+			GROUP BY ORG_GOODS_ID        
+		 ]]>
+	</select>
+
+	<select id="getNaverBookBestsellerProductDto" resultMap="naverBookBestsellerProductDtoResultMap" parameterType="NaverBookBestsellerProductDto" >
+		<![CDATA[
+		SELECT '<<<best_category>>>'||A.BEST_CATEGORY	BEST_CATEGORY
+                ,'<<<rank>>>'||A.RANK	RANK
+				, CASE WHEN A.RANK_UPDOWN = 0 AND A.PRE_RANK = 0 THEN '<<<rank_updown>>>'
+				    ELSE '<<<rank_updown>>>'||A.RANK_UPDOWN
+				    END RANK_UPDOWN
+                ,'<<<isbn>>>'||A.ISBN	ISBN
+                ,'<<<goods_id>>>'||A.GOODS_ID	GOODS_ID
+     	  FROM (
+					SELECT
+					DECODE(Z.CATE1, '205','total','206','105','761','112','721','103','209','114','683','2','762','101','212','119') BEST_CATEGORY 
+					, Z.DISP_ORD	RANK
+					, CASE WHEN PRE_RANK > 0 
+					    THEN Z.PRE_RANK - Z.DISP_ORD
+					    ELSE 0 
+					END RANK_UPDOWN
+					, Z.PRE_RANK	PRE_RANK  
+					, G.GOODS_ISBN	ISBN
+					, Z.GOODS_ID	GOODS_ID
+					FROM 
+					(
+					    SELECT 
+					    A.DISP_ORD
+					    , A.MVC_IDX
+					    , A.CATE1
+					    , A.CATE2
+					    , A.GOODS_ID
+					    , CASE WHEN (SELECT NVL(MAX(MVC_IDX),0) FROM MAIN_VIEW_CATEGORY WHERE GOODS_ID = A.GOODS_ID AND CATE1 = A.CATE1 AND CATE2 = A.CATE2 AND MVC_IDX NOT IN A.MVC_IDX) = 0 THEN 0
+					        WHEN (SELECT NVL(MAX(MVC_IDX),0) FROM MAIN_VIEW_CATEGORY WHERE GOODS_ID = A.GOODS_ID AND CATE1 = A.CATE1 AND CATE2 = A.CATE2 AND MVC_IDX NOT IN A.MVC_IDX) > 0 
+					            THEN (SELECT DISP_ORD FROM MAIN_VIEW_CATEGORY WHERE MVC_IDX = (SELECT NVL(MAX(MVC_IDX),0) FROM MAIN_VIEW_CATEGORY WHERE GOODS_ID = A.GOODS_ID AND CATE1 = A.CATE1 AND CATE2 = A.CATE2 AND MVC_IDX NOT IN A.MVC_IDX))
+					        END PRE_RANK
+					    FROM SW_LIBRO.MAIN_VIEW_CATEGORY A 
+					    WHERE CATE1 in ('205','206','761','721','209','683','762','212')
+					    AND CATE2 = '0'
+					    AND START_DATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+					    AND END_DATE >= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+					    AND DISPLAY = 'Y'
+					    AND DISP_ORD IS NOT NULL 
+					    ORDER BY CATE1, DISP_ORD ASC 
+					) Z
+					LEFT JOIN GOODS G ON G.GOODS_ID = Z.GOODS_ID
+          	) A
+		 ]]>
+	</select>
+
+	<select id="getNaverBookBestsellerCategory" resultMap="naverBookBestsellerProductDtoResultMap" parameterType="NaverBookBestsellerProductDto" >
+		<![CDATA[
+		SELECT
+			A.BW_LARGE_CODE BEST_CATEGORY
+		FROM
+			(
+				SELECT
+					BW_LARGE_CODE
+					 , DECODE(A.BW_LARGE_CODE,'000',0, 1) BW_ORDER_NO
+					 , DECODE(A.BW_LARGE_CODE,'000','종합','600','만화','201','어린이','202','유아',
+							  (SELECT CAT_DESCRIPTION FROM CATALOGUE WHERE CAT_DEL_YN='N' AND CAT_LIBRO_CODE=A.BW_LARGE_CODE)
+					) BW_LARGE_NAME
+				FROM BESTSELLER_WEEK A
+				WHERE BW_DEL_YN='N'
+				  AND BW_START_DATE = TO_NUMBER(TO_CHAR(SYSDATE - 7,'YYYYMMDD'))
+				  AND BW_END_DATE = TO_NUMBER(TO_CHAR(SYSDATE-1, 'YYYYMMDD'))
+				  AND BW_LARGE_CODE IN ('000','105','112','103','114','201','119','101','111')
+				GROUP BY BW_LARGE_CODE
+			) A
+		WHERE A.BW_LARGE_NAME IS NOT NULL
+		ORDER BY A.BW_ORDER_NO ASC, A.BW_LARGE_NAME ASC
+		]]>
+	</select>
+
+	<select id="getNaverBookBestsellerProductDto1" resultMap="naverBookBestsellerProductDtoResultMap" parameterType="NaverBookBestsellerProductDto" >
+		<![CDATA[
+		SELECT
+			'<<<best_category>>>' || X.BW_LARGE_CODE	BEST_CATEGORY
+			 ,'<<<rank>>>' || X.BW_RANK	RANK
+			 , CASE WHEN X.RANK_UPDOWN = 0 AND X.PRE_RANK = 0 THEN '<<<rank_updown>>>'
+					ELSE '<<<rank_updown>>>' || X.RANK_UPDOWN
+			END RANK_UPDOWN
+			 ,'<<<isbn>>>' || X.GOODS_ISBN	ISBN
+			 ,'<<<goods_id>>>' || X.BW_GOODS_ID	GOODS_ID
+		FROM
+			(
+				SELECT
+					DECODE(Y.BW_LARGE_CODE, '000','total', '201','2', Y.BW_LARGE_CODE) BW_LARGE_CODE
+					 , Y.BW_GOODS_ID
+					 , G.GOODS_ISBN
+					 , Y.BW_RANK
+					 , Y.PRE_RANK
+					 , CASE WHEN Y.PRE_RANK > 0 THEN Y.PRE_RANK - Y.BW_RANK ELSE 0 END RANK_UPDOWN
+				FROM
+					(
+						SELECT
+							ROWNUM BW_RANK
+							 , Z.BW_LARGE_CODE, Z.BW_GOODS_ID
+							 , NVL((SELECT BW_RANK FROM BESTSELLER_WEEK WHERE BW_DEL_YN='N' AND BW_LARGE_CODE=Z.BW_LARGE_CODE AND BW_GOODS_ID=Z.BW_GOODS_ID AND BW_START_DATE=TO_NUMBER(TO_CHAR(SYSDATE - 14,'YYYYMMDD')) AND BW_END_DATE=TO_NUMBER(TO_CHAR(SYSDATE - 8, 'YYYYMMDD'))),0) PRE_RANK
+						FROM
+							(
+								SELECT
+									BW_LARGE_CODE, BW_GOODS_ID, BW_RANK
+								FROM BESTSELLER_WEEK B
+										 LEFT JOIN GOODS G ON G.GOODS_ID = B.BW_GOODS_ID
+								WHERE BW_DEL_YN = 'N'
+								  AND BW_LARGE_CODE = #{best_category}
+								  AND BW_START_DATE = TO_NUMBER(TO_CHAR(SYSDATE - 7,'YYYYMMDD'))
+								  AND BW_END_DATE = TO_NUMBER(TO_CHAR(SYSDATE-1, 'YYYYMMDD'))
+								  AND NOT EXISTS (
+										SELECT BDS_GOODS_ID FROM BESTSELLER_DISPLAY_SETUP WHERE BDS_GOODS_ID = B.BW_GOODS_ID
+									)
+								  AND G.GOODS_MALL_ID IN ('1','2','4','5','6')
+								GROUP BY BW_LARGE_CODE, BW_GOODS_ID, BW_RANK
+								ORDER BY BW_LARGE_CODE, BW_RANK ASC
+							) Z
+						WHERE ROWNUM <= 100
+					) Y
+						LEFT JOIN GOODS G ON G.GOODS_ID = Y.BW_GOODS_ID
+			) X
+		]]>
+	</select>
+
+</mapper>

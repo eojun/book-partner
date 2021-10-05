@@ -2,12 +2,14 @@ package com.bookpartner.web.dto;
 
 import com.bookpartner.domain.searchindexgoods.SearchIndexGoods;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class NaverBookDto {
 
 	
