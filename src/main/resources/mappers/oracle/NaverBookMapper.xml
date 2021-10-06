@@ -171,7 +171,7 @@
 	</select>
 	
 	
-	<select id="getNaverBookSellingCount" resultMap="naverBookSaleCountResultMap" parameterType="NaverBookSellingCountDto" >
+	<select id="getNaverBookSellingCountDto" resultMap="naverBookSaleCountResultMap" parameterType="NaverBookSellingCountDto" >
 		<![CDATA[
 			SELECT 
 			    '<<<goods_id>>>'||D.ORG_GOODS_ID GOODS_ID
@@ -292,7 +292,7 @@
 								FROM BESTSELLER_WEEK B
 										 LEFT JOIN GOODS G ON G.GOODS_ID = B.BW_GOODS_ID
 								WHERE BW_DEL_YN = 'N'
-								  AND BW_LARGE_CODE = #{best_category}
+								  AND BW_LARGE_CODE = #{best_category, jdbcType=VARCHAR}
 								  AND BW_START_DATE = TO_NUMBER(TO_CHAR(SYSDATE - 7,'YYYYMMDD'))
 								  AND BW_END_DATE = TO_NUMBER(TO_CHAR(SYSDATE-1, 'YYYYMMDD'))
 								  AND NOT EXISTS (

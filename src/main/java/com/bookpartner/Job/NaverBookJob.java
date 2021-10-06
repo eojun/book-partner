@@ -27,6 +27,9 @@ public class NaverBookJob extends Thread implements Job{
 		
 		fileDir = PartnerConfig.NAVERBOOK_PUTFILE_DIR;
 
+		//test
+		fileDir = "/Users/st/Desktop/test/";
+
 		logger.info("########## PartnerConfig.DAUMSHOP_PUTFILE_DIR :  " + fileDir);
 		logger.info("########## NaverBook Schdule START ########## ");
 		
@@ -64,7 +67,7 @@ public class NaverBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## NaverBook Schdule 3. 판매량 정보 Start ########## ");
-				naverBookService.doNaverBookSellingCount(fileDir);
+				naverBookService.doNaverBookSellingCountDto(fileDir);
 				logger.info("########## NaverBook Schdule 3. 판매량 정보 End ########## ");
 			}
 			catch (Exception e)	{

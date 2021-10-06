@@ -28,4 +28,10 @@ public class NaverBookServiceTest {
         System.out.println("시간차이(m) : "+secDiffTime);
     }
 
+    @Test
+    void makeNaverBookBestSeller() throws Exception {
+
+        naverBookService.doNaverBookBestsellerProductDto("/Users/st/Desktop/test/");
+    }
+
 }

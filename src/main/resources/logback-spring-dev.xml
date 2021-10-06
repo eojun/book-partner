@@ -9,7 +9,6 @@
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 
-
 		<encoder>
 			<charset>UTF-8</charset>      
 			 <outputPatternAsHeader>true</outputPatternAsHeader>
@@ -18,10 +17,11 @@
 	</appender>
 
 	<logger name="org.springframework" level="DEBUG" />
-<!-- 	<logger name="org.thymeleaf" level="INFO" /> -->
-	<logger name="org.hibernate.SQL" level="INFO" />
-	<logger name="org.quartz.core" level="INFO" />
-	<logger name="org.h2.server.web" level="INFO" />
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	<logger name="org.quartz.core" level="DEBUG" />
+	<logger name="org.h2.server.web" level="DEBUG" />
+	<logger name="jdbc.sqlonly" level="ON" />
+	<logger name="jdbc.sqltiming" level="info" />
 
 	<root level="INFO">
 		<appender-ref ref="dailyRollingFileAppender" />

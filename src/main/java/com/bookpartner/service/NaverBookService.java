@@ -35,7 +35,7 @@ public class NaverBookService {
         return sqlSession.selectList("NaverBookMapper.getNaverBookSaleProductDto");
     }
 
-    public List<NaverBookSellingCountDto> getNaverBookSellingCount() {
+    public List<NaverBookSellingCountDto> getNaverBookSellingCountDto() {
         return sqlSession.selectList("NaverBookMapper.getNaverBookSellingCountDto");
     }
 
@@ -47,8 +47,8 @@ public class NaverBookService {
         return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerCategory");
     }
 
-    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto1() {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto1");
+    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto1(NaverBookBestsellerProductDto naverBookBestsellerProductDto) {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto1", naverBookBestsellerProductDto);
     }
 
 
@@ -136,14 +136,14 @@ public class NaverBookService {
      * 업데이트 주기	일별
      * 설명	파일명은 sale_업체이름_yyyymmdd.txt로 전날 판매된 모든 판매량 정보를 만듭니다
      */
-    public void doNaverBookSellingCount(String fileDir) throws Exception{
+    public void doNaverBookSellingCountDto(String fileDir) throws Exception{
 
         GregorianCalendar calendar = new GregorianCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String naverBookFileName = "sale_conectsbook_" + sdf.format(calendar.getTime()) + ".txt";
         String naverBookFilePath = fileDir + naverBookFileName;
 
-        List<NaverBookSellingCountDto> naverBookDtoList = this.getNaverBookSellingCount();
+        List<NaverBookSellingCountDto> naverBookDtoList = this.getNaverBookSellingCountDto();
 
         if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
             PrintWriter pw = new PrintWriter(naverBookFilePath);
@@ -178,7 +178,7 @@ public class NaverBookService {
             for(NaverBookBestsellerProductDto categoryDto : naverBookCategoryList){
                 naverBookDto.setBest_category(categoryDto.getBest_category());
 
-                List<NaverBookBestsellerProductDto> naverBookDtoList = this.getNaverBookBestsellerProductDto1();
+                List<NaverBookBestsellerProductDto> naverBookDtoList = this.getNaverBookBestsellerProductDto1(naverBookDto);
 
                 if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
                     for(NaverBookBestsellerProductDto Dto : naverBookDtoList){

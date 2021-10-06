@@ -1,16 +1,14 @@
 package com.bookpartner.web.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class NaverBookSaleProductDto {
 	
 	private static final long serialVersionUID = 1L;

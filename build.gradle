@@ -20,13 +20,12 @@ repositories {
 }
 
 ext {
-	profile = (!project.hasProperty('profile')) ? 'local' : profile
+	profile = (!project.hasProperty('profile')) ? 'default' : profile
 	springBootVersion  = '2.5.5'
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -48,7 +47,6 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'commons-collections:commons-collections:3.2.2'
-	/*implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'*/
 	implementation group: 'com.github.zhanhb', name: 'thymeleaf-layout-dialect', version: '2.4.1'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
