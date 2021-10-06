@@ -36,10 +36,6 @@ public class SearchIndexGoodsRepository {
 
     private final EntityManager em;
 
-    @Autowired
-    @Qualifier("oracleSqlSessionTemplate")
-    protected SqlSession sqlSession;
-
     public List<NaverBookDto> getNaverBookDtoList(){
         QGoodAuthor translator = new QGoodAuthor("translator");
 
@@ -239,14 +235,6 @@ public class SearchIndexGoodsRepository {
     }
 
 
-    public List<NaverBookDto> getNaverBookDtoListByMybatis(){
-
-        NaverBookDto naverBookDto = new NaverBookDto();
-
-        List<NaverBookDto> list = sqlSession.selectList("NaverBookMapper.getNaverBookEntity", naverBookDto);
-
-        return list;
-    }
 
 
 }

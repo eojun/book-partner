@@ -20,7 +20,7 @@ public abstract class MyBatisConfig {
 	
 	public static final String BASE_PACKAGE = "com.bookpartner.mappers";
 	public static final String ORAGLE_PACKAGE = BASE_PACKAGE+".oracle";
-	public static final String TYPE_ALIASES_PACKAGE = "com.bookpartner.domain";
+	public static final String TYPE_ALIASES_PACKAGE = "com.bookpartner.web.dto";
 	public static final String MAPPER_LOCATIONS_PATH = "classpath:mappers/**/*.xml";
 	
 	protected void configureSqlSessionFactory(SqlSessionFactoryBean sessionFactoryBean, DataSource dataSource) throws IOException {

@@ -1,6 +1,7 @@
 package com.bookpartner.web.dto;
 
 import com.bookpartner.domain.searchindexgoods.SearchIndexGoods;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class NaverBookDto {
 
 	
@@ -38,12 +40,9 @@ public class NaverBookDto {
 	private String feature; // 부록정보, 없는 경우 공백. NaverBook 사용하지 않음.
 	private String isadult; // 19금일 경우 숫자.  청유물 여부로 청유물인 경우 Y, 아닌 경우 N이나 null로 둡니다.
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
 	@Override
 	public String toString() {
-		// Daum..?
-		return "DaumEntity [isbn=" + isbn 
+		return "[isbn=" + isbn
 				+ ", ebook_isbn=" + ebook_isbn
 				+ ", isbn_additional_sign=" + isbn_additional_sign
 				+ ", section=" + section
@@ -115,132 +114,6 @@ public class NaverBookDto {
 		this.author_code = "<<<author_code>>>";
 		this.feature = "<<<feature>>>";
 
-	}
-
-	public NaverBookDto(SearchIndexGoods entity){
-
-	}
-
-	public NaverBookDto(SearchIndexGoods entity, String category_no, String category_no2, String translator, String pages, String image_url, String image_url2, String description, String author_intro, String contents) {
-		this.isbn = entity.getBarcode() != null ? "<<<isbn>>>" + entity.getBarcode() : "<<<isbn>>>" + entity.getIsbn();
-		this.ebook_isbn = "<<<ebook_isbn>>>";
-		this.isbn_additional_sign = "<<<isbn_additional_sign>>>";
-		this.section = "<<<section>>>";
-		this.category_no = "<<<category_no>>>" + category_no;
-		this.category_no2 = "<<<category_no2>>>" + category_no2;
-		this.goods_id = "<<<goods_id>>>" + entity.getGoodsId();
-		this.title = "<<<title>>>" + entity.getGoodsName();
-		this.subtitle = "<<<subtitle>>>" + entity.getGoodsSubName();
-		this.volume = "<<<volume>>>";
-		this.book_price = "<<<book_price>>>" + entity.getPrcPrice();
-		this.author_name = "<<<author_name>>>" + entity.getAuthorName();
-		this.author_code = "<<<author_code>>>";
-		this.translator = "<<<translator>>>" + translator;
-		this.publisher = "<<<publisher>>>" + entity.getPubName().replaceAll("펴냄","").replaceAll("출간","").replaceAll("도서출판","").replaceAll("(주)","");
-		this.publish_day = "<<<publish_day>>>" + sdf.format(entity.getPubDate());
-		this.pages = "<<<pages>>>" + pages;
-		this.image_url = "<<<image_url>>>" + image_url;
-		this.image_url_2 = "<<<image_url_2>>>" + image_url2;
-		this.description = "<<<description>>>" + description;
-		this.author_intro = "<<<author_intro>>>" + author_intro;
-		this.contents = "<<<contents>>>" + contents;
-		this.feature = "<<<feature>>>";
-
-		if(entity.getGoodsDegree() != null && entity.getGoodsDegree().equals("19")){
-			this.isadult = "Y";
-		}else{
-			this.isadult = "";
-		}
-	}
-
-
-	public NaverBookDto(SearchIndexGoods entity, String translator, String pages, String image_url, String image_url2, String description, String author_intro, String contents) {
-		this.isbn = entity.getBarcode() != null ? "<<<isbn>>>" + entity.getBarcode() : "<<<isbn>>>" + entity.getIsbn();
-		this.ebook_isbn = "<<<ebook_isbn>>>";
-		this.isbn_additional_sign = "<<<isbn_additional_sign>>>";
-		this.section = "<<<section>>>";
-		this.category_no = "<<<category_no>>>" + entity.getCatCode();
-		this.category_no2 = "<<<category_no2>>>" + entity.getSubCateCode();
-		this.goods_id = "<<<goods_id>>>" + entity.getGoodsId();
-		this.title = "<<<title>>>" + entity.getGoodsName();
-		this.subtitle = "<<<subtitle>>>" + entity.getGoodsSubName();
-		this.volume = "<<<volume>>>";
-		this.book_price = "<<<book_price>>>" + entity.getPrcPrice();
-		this.author_name = "<<<author_name>>>" + entity.getAuthorName();
-		this.author_code = "<<<author_code>>>";
-		this.translator = "<<<translator>>>" + translator;
-		this.publisher = "<<<publisher>>>" + entity.getPubName().replaceAll("펴냄","").replaceAll("출간","").replaceAll("도서출판","").replaceAll("(주)","");
-		this.publish_day = "<<<publish_day>>>" + sdf.format(entity.getPubDate());
-		this.pages = "<<<pages>>>" + pages;
-		this.image_url = "<<<image_url>>>" + image_url;
-		this.image_url_2 = "<<<image_url_2>>>" + image_url2;
-		this.description = "<<<description>>>" + description;
-		this.author_intro = "<<<author_intro>>>" + author_intro;
-		this.contents = "<<<contents>>>" + contents;
-		this.feature = "<<<feature>>>";
-
-		if(entity.getGoodsDegree() != null && entity.getGoodsDegree().equals("19")){
-			this.isadult = "Y";
-		}else{
-			this.isadult = "";
-		}
-	}
-
-	public NaverBookDto(SearchIndexGoods entity, String translator){
-		this.goods_id = entity.getGoodsId();
-		this.translator = translator;
-	}
-
-	public NaverBookDto(
-			String isbn,
-			String ebook_isbn,
-			String isbn_additional_sign,
-			String section,
-			String category_no,
-			String category_no2,
-			String goods_id,
-			String title,
-			String subtitle,
-			String volume,
-			String book_price,
-			String author_name,
-			String author_code,
-			String translator,
-			String publisher,
-			String publish_day,
-			String pages,
-			String image_url,
-			String image_url_2,
-			String description,
-			String author_intro,
-			String contents,
-			String feature,
-			String isadult
-	){
-		this.isbn = isbn;
-		this.ebook_isbn = ebook_isbn;
-		this.isbn_additional_sign = isbn_additional_sign;
-		this.section = section;
-		this.category_no = category_no;
-		this.category_no2 = category_no2;
-		this.goods_id = goods_id;
-		this.title = title;
-		this.subtitle = subtitle;
-		this.volume = volume;
-		this.book_price = book_price;
-		this.author_name = author_name;
-		this.author_code = author_code;
-		this.translator = translator;
-		this.publisher = publisher;
-		this.publish_day = publish_day;
-		this.pages = pages;
-		this.image_url = image_url;
-		this.image_url_2 = image_url_2;
-		this.description = description;
-		this.author_intro = author_intro;
-		this.contents = contents;
-		this.feature = feature;
-		this.isadult  = isadult;
 	}
 
 }

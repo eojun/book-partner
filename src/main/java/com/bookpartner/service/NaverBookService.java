@@ -27,28 +27,28 @@ public class NaverBookService {
     @Qualifier("oracleSqlSessionTemplate")
     protected SqlSession sqlSession;
 
-    public List<NaverBookDto> getNaverBookDto(NaverBookDto naverBookDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookDto", naverBookDto);
+    public List<NaverBookDto> getNaverBookDto() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookDto");
     }
 
-    public List<NaverBookSaleProductDto> getNaverBookSaleProductDto(NaverBookSaleProductDto naverBookSaleProductDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookSaleProductDto", naverBookSaleProductDto);
+    public List<NaverBookSaleProductDto> getNaverBookSaleProductDto() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookSaleProductDto");
     }
 
-    public List<NaverBookSellingCountDto> getNaverBookSellingCount(NaverBookSellingCountDto naverBookSellingCountDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookSellingCountDto", naverBookSellingCountDto);
+    public List<NaverBookSellingCountDto> getNaverBookSellingCount() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookSellingCountDto");
     }
 
-    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto(NaverBookBestsellerProductDto naverBookBestsellerProductDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto", naverBookBestsellerProductDto);
+    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto");
     }
 
-    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerCategory(NaverBookBestsellerProductDto naverBookBestsellerProductDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerCategory", naverBookBestsellerProductDto);
+    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerCategory() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerCategory");
     }
 
-    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto1(NaverBookBestsellerProductDto naverBookBestsellerProductDto) {
-        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto1", naverBookBestsellerProductDto);
+    public List<NaverBookBestsellerProductDto> getNaverBookBestsellerProductDto1() {
+        return sqlSession.selectList("NaverBookMapper.getNaverBookBestsellerProductDto1");
     }
 
 
@@ -66,9 +66,7 @@ public class NaverBookService {
         String naverBookFileName = "biblio_conectsbook_" + sdf.format(calendar.getTime()) + ".txt";
         String naverBookFilePath = fileDir + naverBookFileName;
 
-        NaverBookDto naverBookDto = new NaverBookDto();
-
-        List<NaverBookDto> naverBookDtoList = this.getNaverBookDto(naverBookDto);
+        List<NaverBookDto> naverBookDtoList = this.getNaverBookDto();
 
         if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
             PrintWriter pw = new PrintWriter(naverBookFilePath);
@@ -111,9 +109,7 @@ public class NaverBookService {
         String naverBookFileName = "product_conectsbook_" + sdf.format(calendar.getTime()) + ".txt";
         String naverBookFilePath = fileDir + naverBookFileName;
 
-        NaverBookSaleProductDto naverBookDto = new NaverBookSaleProductDto();
-
-        List<NaverBookSaleProductDto> naverBookDtoList = this.getNaverBookSaleProductDto(naverBookDto);
+        List<NaverBookSaleProductDto> naverBookDtoList = this.getNaverBookSaleProductDto();
 
         if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
             PrintWriter pw = new PrintWriter(naverBookFilePath);
@@ -147,9 +143,7 @@ public class NaverBookService {
         String naverBookFileName = "sale_conectsbook_" + sdf.format(calendar.getTime()) + ".txt";
         String naverBookFilePath = fileDir + naverBookFileName;
 
-        NaverBookSellingCountDto naverBookDto = new NaverBookSellingCountDto();
-
-        List<NaverBookSellingCountDto> naverBookDtoList = this.getNaverBookSellingCount(naverBookDto);
+        List<NaverBookSellingCountDto> naverBookDtoList = this.getNaverBookSellingCount();
 
         if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
             PrintWriter pw = new PrintWriter(naverBookFilePath);
@@ -176,7 +170,7 @@ public class NaverBookService {
 
         NaverBookBestsellerProductDto naverBookDto = new NaverBookBestsellerProductDto();
 
-        List<NaverBookBestsellerProductDto> naverBookCategoryList = this.getNaverBookBestsellerCategory(naverBookDto);
+        List<NaverBookBestsellerProductDto> naverBookCategoryList = this.getNaverBookBestsellerCategory();
 
         if(null != naverBookCategoryList && naverBookCategoryList.size() > 0 ){
             PrintWriter pw = new PrintWriter(naverBookFilePath);
@@ -184,7 +178,7 @@ public class NaverBookService {
             for(NaverBookBestsellerProductDto categoryDto : naverBookCategoryList){
                 naverBookDto.setBest_category(categoryDto.getBest_category());
 
-                List<NaverBookBestsellerProductDto> naverBookDtoList = this.getNaverBookBestsellerProductDto1(naverBookDto);
+                List<NaverBookBestsellerProductDto> naverBookDtoList = this.getNaverBookBestsellerProductDto1();
 
                 if(null != naverBookDtoList && naverBookDtoList.size() > 0 ){
                     for(NaverBookBestsellerProductDto Dto : naverBookDtoList){

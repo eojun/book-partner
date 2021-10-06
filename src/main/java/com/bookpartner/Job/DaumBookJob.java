@@ -1,7 +1,6 @@
 package com.bookpartner.Job;
 
-import kr.co.libro.commons.config.PartnerConfig;
-import kr.co.libro.services.DaumBookService;
+import com.bookpartner.config.PartnerConfig;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -31,12 +30,12 @@ public class DaumBookJob extends Thread implements Job{
 		
 		
 		try {
-			DaumBookService daumBookService = applicationContext.getBean("daumBookService", DaumBookService.class);
+			//DaumBookService daumBookService = applicationContext.getBean("daumBookService", DaumBookService.class);
 			
 			// 연동명	1. 서지	파일명	book_업체이름_yyyymmdd.txt
 			try{
 				logger.info("########## DaumBook Schdule 1. 서지 Start ########## ");
-				daumBookService.doGetDaumBookEntity(fileDir);
+				//daumBookService.doGetDaumBookEntity(fileDir);
 				logger.info("########## DaumBook Schdule 1. 서지 End ########## ");
 			}
 			catch (Exception e)	{
@@ -50,7 +49,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 300초 쉬기
 				logger.info("########## DaumBook Schdule 2. 판매상품정보 Start ########## ");
-				daumBookService.doGetDaumBookSaleProductEntity(fileDir);
+				//daumBookService.doGetDaumBookSaleProductEntity(fileDir);
 				logger.info("########## DaumBook Schdule 2. 판매상품정보 End ########## ");
 			}
 			catch (Exception e)	{
@@ -64,7 +63,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 3. 책 카테고리 Start ########## ");
-				daumBookService.doGetDaumBookCategoryEntity(fileDir);
+				//daumBookService.doGetDaumBookCategoryEntity(fileDir);
 				logger.info("########## DaumBook Schdule 3. 책 카테고리 End ########## ");
 			}
 			catch (Exception e)	{
@@ -78,7 +77,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 4. 리뷰/평점 Start ########## ");
-				daumBookService.doGetDaumBookReviewEntity(fileDir);
+				//daumBookService.doGetDaumBookReviewEntity(fileDir);
 				logger.info("########## DaumBook Schdule 4. 리뷰/평점 End ########## ");
 			}
 			catch (Exception e)	{
@@ -92,7 +91,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 5. 베스트셀러 Start ########## ");
-				daumBookService.doGetDaumBookBestsellerEntity(fileDir);
+				//daumBookService.doGetDaumBookBestsellerEntity(fileDir);
 				logger.info("########## DaumBook Schdule 5. 베스트셀러 End ########## ");
 			}
 			catch (Exception e)	{
@@ -107,7 +106,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 11. 판매정보(xml) Start ########## ");
-				daumBookService.doGetDaumBookSellingXml(fileDir);
+				//daumBookService.doGetDaumBookSellingXml(fileDir);
 				logger.info("########## DaumBook Schdule 11. 판매정보(xml) End ########## ");
 			}
 			catch (Exception e)	{
@@ -121,7 +120,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 12. 이벤트정보(xml) Start ########## ");
-				daumBookService.doGetDaumBookEventXml(fileDir);
+				//daumBookService.doGetDaumBookEventXml(fileDir);
 				logger.info("########## DaumBook Schdule 12. 이벤트정보(xml) End ########## ");
 			}
 			catch (Exception e)	{
@@ -135,7 +134,7 @@ public class DaumBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## DaumBook Schdule 13. 이벤트중인 책(xml) Start ########## ");
-				daumBookService.doGetDaumBookEventBookXml(fileDir);
+				//daumBookService.doGetDaumBookEventBookXml(fileDir);
 				logger.info("########## DaumBook Schdule 13. 이벤트중인 책(xml) End ########## ");
 			}
 			catch (Exception e)	{

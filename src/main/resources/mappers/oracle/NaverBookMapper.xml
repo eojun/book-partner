@@ -58,7 +58,7 @@
 		<result property="best_category"		column="BEST_CATEGORY" />
 	</resultMap>
 	
-	<select id="getNaverBookDto" resultMap="naverBookDtoResultMap" parameterType="NaverBookDto" >
+	<select id="getNaverBookDto" resultMap="naverBookDtoResultMap">
 		<![CDATA[
 		SELECT 
 				ISBN

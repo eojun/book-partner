@@ -1,6 +1,7 @@
 package com.bookpartner.Job;
 
 import com.bookpartner.config.PartnerConfig;
+import com.bookpartner.service.NaverBookService;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -30,12 +31,12 @@ public class NaverBookJob extends Thread implements Job{
 		logger.info("########## NaverBook Schdule START ########## ");
 		
 		try {
-			//NaverBookService naverBookService = applicationContext.getBean("naverBookService", NaverBookService.class);
+			NaverBookService naverBookService = applicationContext.getBean("naverBookService", NaverBookService.class);
 			
 			// 1. 서지
 			try{
 				logger.info("########## NaverBook Schdule 1. 서지 Start ########## ");
-				//naverBookService.doNaverBookEntity(fileDir);
+				naverBookService.doNaverBookDto(fileDir);
 				logger.info("########## NaverBook Schdule 1. 서지 End ########## ");
 			}
 			catch (Exception e)	{
@@ -49,7 +50,7 @@ public class NaverBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## NaverBook Schdule 2. 판매상품정보 Start ########## ");
-				//naverBookService.doNaverBookSaleProductEntity(fileDir);
+				naverBookService.doNaverBookSaleProductDto(fileDir);
 				logger.info("########## NaverBook Schdule 2. 판매상품정보 End ########## ");
 			}
 			catch (Exception e)	{
@@ -63,7 +64,7 @@ public class NaverBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## NaverBook Schdule 3. 판매량 정보 Start ########## ");
-				//naverBookService.doNaverBookSellingCount(fileDir);
+				naverBookService.doNaverBookSellingCount(fileDir);
 				logger.info("########## NaverBook Schdule 3. 판매량 정보 End ########## ");
 			}
 			catch (Exception e)	{
@@ -77,7 +78,7 @@ public class NaverBookJob extends Thread implements Job{
 			try{
 				Thread.sleep(1000 * 60); // 60초 쉬기
 				logger.info("########## NaverBook Schdule 4. 베스트셀러 상품정보 Start ########## ");
-				//naverBookService.doNaverBookBestsellerProductEntity(fileDir);
+				naverBookService.doNaverBookBestsellerProductDto(fileDir);
 				logger.info("########## NaverBook Schdule 4. 베스트셀러 상품정보 End ########## ");
 			}
 			catch (Exception e)	{
