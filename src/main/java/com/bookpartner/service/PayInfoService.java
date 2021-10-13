@@ -49,4 +49,14 @@ public class PayInfoService {
     public List<SalesCalcResultDto> getSalesCalcResult(String startDate, String endDate, String admJoinsId) {
         return payInfoRepository.getSalesCalcResult(startDate, endDate, admJoinsId);
     }
+
+    @Transactional
+    public void insertPayInfo(String payNo, String payPrice, String payAuthDate, String payStatus, String ordJoinsId){
+        payInfoRepository.insertPayInfo(payNo, payPrice, payAuthDate, payStatus, ordJoinsId);
+    }
+
+    @Transactional
+    public void deletePayInfo(String payNo){
+        payInfoRepository.deletePayInfo(payNo);
+    }
 }

@@ -4,6 +4,7 @@ import com.bookpartner.web.dto.NaverBookBestsellerProductDto;
 import com.bookpartner.web.dto.NaverBookDto;
 import com.bookpartner.web.dto.NaverBookSaleProductDto;
 import com.bookpartner.web.dto.NaverBookSellingCountDto;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -23,9 +24,8 @@ public class NaverBookService {
 
     private static final Logger logger = LoggerFactory.getLogger(NaverBookService.class);
 
-    @Autowired
     @Qualifier("oracleSqlSessionTemplate")
-    protected SqlSession sqlSession;
+    protected final SqlSession sqlSession;
 
     public List<NaverBookDto> getNaverBookDto() {
         return sqlSession.selectList("NaverBookMapper.getNaverBookDto");

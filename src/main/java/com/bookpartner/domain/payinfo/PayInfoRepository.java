@@ -421,4 +421,17 @@ public class PayInfoRepository {
 
         return dto;
     }
+
+    @Transactional
+    public void insertPayInfo(String payNo, String payPrice, String payAuthDate, String payStatus, String ordJoinsId){
+        queryFactory.insert(payInfo)
+                .columns(payInfo.payNo, payInfo.payPrice, payInfo.payAuthDate, payInfo.payStatus, payInfo.orders.ordJoinsId)
+                .values(payNo, payPrice, payAuthDate, payStatus, ordJoinsId);
+    }
+
+    @Transactional
+    public void deletePayInfo(String payNo){
+        queryFactory.delete(payInfo).where(payInfo.payNo.eq(payNo));
+    }
+
 }

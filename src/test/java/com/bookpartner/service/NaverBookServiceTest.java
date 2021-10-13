@@ -3,14 +3,17 @@ package com.bookpartner.service;
 import com.bookpartner.TestConfig;
 import com.bookpartner.web.dto.NaverBookDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-@SpringBootTest
+@SpringBootTest // 통합테스트. 모든 Bean을 등록하게
 @Import(TestConfig.class)
+//@ExtendWith(SpringExtension.class)
 public class NaverBookServiceTest {
 
     @Autowired

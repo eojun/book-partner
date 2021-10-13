@@ -1,13 +1,19 @@
 package com.bookpartner.service;
 
 import com.bookpartner.TestConfig;
+import com.bookpartner.domain.payinfo.PayInfo;
+import com.bookpartner.domain.payinfo.PayInfoRepository;
 import com.bookpartner.web.dto.*;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Import(TestConfig.class)
@@ -16,15 +22,37 @@ public class PayInfoServiceTest {
     @Autowired
     private PayInfoService payInfoService;
 
-    @Test
-    void getOrderCount(){
-        String startDate = "2021-09-13";
-        String endDate = "2021-09-14";
+    @Before
+    public void setup(){
+        String startDate = "2100-01-01";
+        String endDate = "2100-01-02";
         String admJoinsId = "NAVERBOOK";
 
+        // payNo, payPrice, payAuthDate, payStatus
+        payInfoService.insertPayInfo("TEST1", "10000", startDate, "4003", admJoinsId);
+        payInfoService.insertPayInfo("TEST2", "20000", startDate, "4003", admJoinsId);
+    }
+
+    @After
+    public void teardown(){
+        payInfoService.deletePayInfo("TEST1");
+        payInfoService.deletePayInfo("TEST2");
+    }
+
+    @Test
+    void getOrderCount(){
+        //Given
+        String startDate = "2100-01-01";
+        String endDate = "2100-01-02";
+        String admJoinsId = "NAVERBOOK";
+
+        // When
         long count = payInfoService.getOrderCount(startDate, endDate, admJoinsId);
 
+        // Then
         System.out.println("count = " + count);
+        assertThat(count).isEqualTo(2);
+
     }
 
     @Test
