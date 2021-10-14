@@ -1,6 +1,7 @@
 package com.bookpartner.domain.payinfo;
 
 import com.bookpartner.domain.orders.Orders;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -60,9 +61,22 @@ public class PayInfo {
     private String param3;
     @Column(name = "PARAM4")
     private String param4;
+    @Column(name="PAY_ORDER_ID")
+    private String payOrderId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="PAY_ORDER_ID", referencedColumnName = "ORD_ORDER_ID", insertable = false, updatable = false)
     private Orders orders;
+
+    @Builder
+    public PayInfo(String payNo, String payAuthDate, String payStatus, int payPrice, String payCode, String payOrderId, String payPrimary){
+        this.payNo = payNo;
+        this.payAuthDate = payAuthDate;
+        this.payStatus = payStatus;
+        this.payPrice = payPrice;
+        this.payCode = payCode;
+        this.payOrderId = payOrderId;
+        this.payPrimary = payPrimary;
+    }
 
 }

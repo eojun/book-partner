@@ -1,53 +1,76 @@
 package com.bookpartner.service;
 
 import com.bookpartner.TestConfig;
+import com.bookpartner.domain.orders.Orders;
 import com.bookpartner.domain.payinfo.PayInfo;
 import com.bookpartner.domain.payinfo.PayInfoRepository;
 import com.bookpartner.web.dto.*;
-import org.junit.Before;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 @Import(TestConfig.class)
 public class PayInfoServiceTest {
 
     @Autowired
     private PayInfoService payInfoService;
 
-    @Before
-    public void setup(){
-        String startDate = "2100-01-01";
-        String endDate = "2100-01-02";
-        String admJoinsId = "NAVERBOOK";
+    @Autowired
+    private OrdersService ordersService;
 
-        // payNo, payPrice, payAuthDate, payStatus
-        payInfoService.insertPayInfo("TEST1", "10000", startDate, "4003", admJoinsId);
-        payInfoService.insertPayInfo("TEST2", "20000", startDate, "4003", admJoinsId);
+    @Autowired
+    EntityManager em;
+
+
+
+    @BeforeEach
+    public void setup(){
+
+        Orders orders1 = Orders.builder().ordOrderId("0000").ordRcvName("수령인").ordRcvZip("12345").ordRcvAddr("주소").ordCustName("고객명").ordRcvTel1("01011112222").ordJoinsId("NAVERBOOK").build();
+
+        PayInfo payInfo1 = PayInfo.builder().payPrice(10000).payNo("0001").payStatus("2601").payCode("4418").payAuthDate("2100-01-02").payOrderId("0000").payPrimary("1").build();
+        PayInfo payInfo2 = PayInfo.builder().payPrice(10000).payNo("0002").payStatus("2601").payCode("4418").payAuthDate("2100-01-02").payOrderId("0000").payPrimary("1").build();
+
+        em.persist(payInfo1);
+        em.persist(payInfo2);
+        em.persist(orders1);
+        em.flush();
     }
 
-    @After
+    @AfterEach
     public void teardown(){
-        payInfoService.deletePayInfo("TEST1");
-        payInfoService.deletePayInfo("TEST2");
+        PayInfo payinfo1 = payInfoService.getPayInfo("0001");
+        PayInfo payinfo2 = payInfoService.getPayInfo("0002");
+        Orders orders1 = ordersService.getOrders("0000");
+
+        em.remove(payinfo1);
+        em.remove(payinfo2);
+        em.remove(orders1);
+
+        em.flush();
     }
 
     @Test
     void getOrderCount(){
-        //Given
+        // Given
         String startDate = "2100-01-01";
-        String endDate = "2100-01-02";
+        String endDate = "2100-01-03";
         String admJoinsId = "NAVERBOOK";
 
         // When
-        long count = payInfoService.getOrderCount(startDate, endDate, admJoinsId);
+        int count = (int) payInfoService.getOrderCount(startDate, endDate, admJoinsId);
 
         // Then
         System.out.println("count = " + count);

@@ -45,9 +45,6 @@ $(document).ready(function () {
     $container.find("#searchStartDate").val(_searchStartDate);
     $container.find("#searchEndDate").val(_searchEndDate);
 
-    $container.find(".btn_search,.btn_search_tatal").click(function(){
-        searchSalesListResult();
-    });
 
 });
 

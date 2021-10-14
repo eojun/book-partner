@@ -2,6 +2,7 @@ package com.bookpartner.domain.orders;
 
 import com.bookpartner.domain.ordergoods.OrderGoods;
 import com.bookpartner.domain.payinfo.PayInfo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -107,5 +108,16 @@ public class Orders {
 
     @OneToMany(mappedBy = "orders")
     List<OrderGoods> ordergoods = new ArrayList<>();
+
+    @Builder
+    public Orders(String ordOrderId, String ordCustName, String ordRcvName, String ordRcvZip, String ordRcvAddr, String ordRcvTel1, String ordJoinsId){
+        this.ordOrderId = ordOrderId;
+        this.ordCustName = ordCustName;
+        this.ordRcvName = ordRcvName;
+        this.ordRcvZip = ordRcvZip;
+        this.ordRcvAddr = ordRcvAddr;
+        this.ordRcvTel1 = ordRcvTel1;
+        this.ordJoinsId = ordJoinsId;
+    }
 
 }

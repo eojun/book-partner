@@ -7,9 +7,13 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.bookpartner.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.bookpartner.domain.payinfo.QPayInfo.payInfo;
@@ -19,6 +23,12 @@ import static com.bookpartner.domain.payinfo.QPayInfo.payInfo;
 public class PayInfoRepository {
 
     private final JPAQueryFactory queryFactory;
+
+
+    @Transactional
+    public PayInfo getPayInfo(String pay_no){
+        return queryFactory.selectFrom(payInfo).where(payInfo.payNo.eq(pay_no)).fetchOne();
+    }
 
     @Transactional
     public long getOrderCount(String startDate, String endDate, String admJoinsId){
@@ -420,18 +430,6 @@ public class PayInfoRepository {
                 .fetch();
 
         return dto;
-    }
-
-    @Transactional
-    public void insertPayInfo(String payNo, String payPrice, String payAuthDate, String payStatus, String ordJoinsId){
-        queryFactory.insert(payInfo)
-                .columns(payInfo.payNo, payInfo.payPrice, payInfo.payAuthDate, payInfo.payStatus, payInfo.orders.ordJoinsId)
-                .values(payNo, payPrice, payAuthDate, payStatus, ordJoinsId);
-    }
-
-    @Transactional
-    public void deletePayInfo(String payNo){
-        queryFactory.delete(payInfo).where(payInfo.payNo.eq(payNo));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bookpartner.service;
 
+import com.bookpartner.domain.payinfo.PayInfo;
 import com.bookpartner.domain.payinfo.PayInfoRepository;
 import com.bookpartner.web.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,11 @@ import java.util.List;
 @Service
 public class PayInfoService {
     private final PayInfoRepository payInfoRepository;
+
+    @Transactional
+    public PayInfo getPayInfo(String payNo){
+        return payInfoRepository.getPayInfo(payNo);
+    }
 
     @Transactional
     public long getOrderCount(String startDate, String endDate, String admJoinsId){
@@ -50,13 +56,7 @@ public class PayInfoService {
         return payInfoRepository.getSalesCalcResult(startDate, endDate, admJoinsId);
     }
 
-    @Transactional
-    public void insertPayInfo(String payNo, String payPrice, String payAuthDate, String payStatus, String ordJoinsId){
-        payInfoRepository.insertPayInfo(payNo, payPrice, payAuthDate, payStatus, ordJoinsId);
-    }
 
-    @Transactional
-    public void deletePayInfo(String payNo){
-        payInfoRepository.deletePayInfo(payNo);
-    }
+
+
 }
